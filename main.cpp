@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "drawLines.hpp"
 #include "image.hpp"
+#include "vector.hpp"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -25,8 +26,27 @@ int main(void) {
     SDL_LockSurface(surface); 
 
     //EVERYTHING ELSE GOES HERE
-    drawLines(&image);
     //
+
+
+    vec2i p0 = vec2i(320, 50);
+    vec2i p1 = vec2i(20, 400);
+    vec2i p2 = vec2i(620, 400);
+    vec2i p3 = vec2i(200, 100);
+
+    vec2i p0a = vec2i(320, 100);
+    vec2i p1a = vec2i(320, 300);
+    vec2i p2a = vec2i(430, 200);
+
+
+    drawLines(p0, p1, &image);
+    drawLines(p1, p2, &image);
+    drawLines(p2, p0, &image);
+   
+    drawLines(p0a, p1a, &image);
+    drawLines(p1a, p2a, &image);
+    drawLines(p2a, p0a, &image);
+    
 
     SDL_UnlockSurface(surface);
 

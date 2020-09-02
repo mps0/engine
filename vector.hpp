@@ -12,6 +12,19 @@ class vec2 {
         vec2() : x(0), y(0) {}
         vec2(T x, T y) : x(x), y(y) {}
 
+        void set(T x, T y) {
+            this->x = x;
+            this->y = y;
+        }
+
+        void swap() {
+            T tmp = x;
+            this->x = y;
+            this->y = tmp;
+        }
+        
+
+
 
 
 };
