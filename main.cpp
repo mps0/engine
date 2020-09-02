@@ -1,5 +1,7 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include "drawLines.hpp"
+#include "image.hpp"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -17,12 +19,13 @@ int main(void) {
     SDL_Texture * texture = SDL_CreateTexture(renderer,
             SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    Uint32* pixels = new Uint32[SCREEN_WIDTH * SCREEN_HEIGHT];
+    Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 
     SDL_LockSurface(surface); 
 
     //EVERYTHING ELSE GOES HERE
-    memset(pixels, 255, SCREEN_WIDTH * SCREEN_HEIGHT * sizeof(Uint32));
+    drawLines(&image);
     //
 
     SDL_UnlockSurface(surface);
@@ -30,7 +33,7 @@ int main(void) {
     bool run = true;
     int i = 0;
     while(run) {
-        SDL_UpdateTexture(texture, NULL, pixels, SCREEN_WIDTH * sizeof(Uint32));
+        SDL_UpdateTexture(texture, NULL, image.pixels, SCREEN_WIDTH * sizeof(Uint32));
 
         if(SDL_PollEvent(&event) && event.type == SDL_QUIT){
             break;
@@ -42,7 +45,6 @@ int main(void) {
 
     }
 
-    delete[] pixels;
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
 

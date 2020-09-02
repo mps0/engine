@@ -1,13 +1,22 @@
-OBJS = main.cpp
+CXX = g++
 
-CC = g++
+CFLAGS = -w
 
-COMPILER_FLAGS = -w
+LFLAGS = -lSDL2
 
-LINKER_FLAGS = -lSDL2
 
-OBJ_NAME = SDLtest
+rast: main.o drawLines.o vector.o image.o
+	$(CXX) $(CFLAGS) -v -o rast main.o $(LFLAGS)
 
-all : $(OBJS)
-		g++ $(OBJS) $(COMPILER_FLAGS) $(LINKER_FLAGS) -w -lSDL2 -o $(OBJ_NAME)
+main.o: main.cpp drawLines.hpp vector.hpp image.hpp
+	$(CXX) $(CFLAGS) -c main.cpp -o main.o
+
+drawLines.o: drawLines.hpp vector.hpp image.hpp
+	$(CCXX) $(CFLAGS) -c drawLines.hpp -o drawLines.o
+
+vector.o: vector.hpp
+	$(CCXX) $(CFLAGS) -c vector.hpp -o vector.o
+
+image.o: image.hpp
+	$(CCXX) $(CFLAGS) -c image.hpp -o image.o
 
