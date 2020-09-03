@@ -1,8 +1,11 @@
 #include <SDL2/SDL.h>
 #include <stdio.h>
+#include <chrono>
+
 #include "drawLines.hpp"
 #include "image.hpp"
 #include "vector.hpp"
+#include "pipeline.hpp"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
@@ -23,12 +26,7 @@ int main(void) {
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
-    SDL_LockSurface(surface); 
-
-    //EVERYTHING ELSE GOES HERE
-    //
-
-
+    //test points
     vec2i p0 = vec2i(320, 50);
     vec2i p1 = vec2i(20, 400);
     vec2i p2 = vec2i(620, 400);
@@ -39,6 +37,11 @@ int main(void) {
     vec2i p2a = vec2i(430, 200);
 
 
+    bool run = true;
+    int i = 0;
+    while(run) {
+    auto exec_start = std::chrono::high_resolution_clock::now();
+    pipeline();
     drawLines(p0, p1, &image);
     drawLines(p1, p2, &image);
     drawLines(p2, p0, &image);
@@ -46,13 +49,7 @@ int main(void) {
     drawLines(p0a, p1a, &image);
     drawLines(p1a, p2a, &image);
     drawLines(p2a, p0a, &image);
-    
 
-    SDL_UnlockSurface(surface);
-
-    bool run = true;
-    int i = 0;
-    while(run) {
         SDL_UpdateTexture(texture, NULL, image.pixels, SCREEN_WIDTH * sizeof(Uint32));
 
         if(SDL_PollEvent(&event) && event.type == SDL_QUIT){
@@ -62,6 +59,8 @@ int main(void) {
         SDL_RenderClear(renderer);
         SDL_RenderCopy(renderer, texture, NULL, NULL);
         SDL_RenderPresent(renderer);
+    auto exec_end = std::chrono::high_resolution_clock::now();
+    printf("Loop time:%i ms\n", std::chrono::duration_cast<std::chrono::milliseconds>(exec_end - exec_start).count());
 
     }
 
