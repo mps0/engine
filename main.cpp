@@ -27,14 +27,14 @@ int main(void) {
 
 
     //test points
-    vec2i p0 = vec2i(320, 50);
-    vec2i p1 = vec2i(20, 400);
-    vec2i p2 = vec2i(620, 400);
-    vec2i p3 = vec2i(200, 100);
+    Vec2i p0 = Vec2i(320, 50);
+    Vec2i p1 = Vec2i(20, 400);
+    Vec2i p2 = Vec2i(620, 400);
+    Vec2i p3 = Vec2i(200, 100);
 
-    vec2i p0a = vec2i(320, 100);
-    vec2i p1a = vec2i(320, 300);
-    vec2i p2a = vec2i(430, 200);
+    Vec2i p0a = Vec2i(320, 100);
+    Vec2i p1a = Vec2i(320, 300);
+    Vec2i p2a = Vec2i(430, 200);
 
 
     bool run = true;

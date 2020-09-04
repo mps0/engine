@@ -4,14 +4,13 @@
 #include <cmath>
 
 
-template<class T>
-class vec2 {
+template<class T> class Vec2 {
     public:
 
         T x, y;
 
-        vec2() : x(0), y(0) {}
-        vec2(T x, T y) : x(x), y(y) {}
+        Vec2() : x(0), y(0) {}
+        Vec2(T x, T y) : x(x), y(y) {}
 
         void set(T x, T y) {
             this->x = x;
@@ -25,58 +24,69 @@ class vec2 {
         }
 
 };
-typedef vec2<int> vec2i;
-typedef vec2<float> vec2f;
+typedef Vec2<int> Vec2i;
+typedef Vec2<float> Vec2f;
 
 template<class T>
-class vec3 {
+class Vec3 {
     public:
         T x, y, z;
 
-        vec3() : x(0), y(0), z(0){}
-        vec3(T x, T y, T z) : x(x), y(y), z(z) {}
+        Vec3() : x(0), y(0), z(0){}
+        Vec3(T x, T y, T z) : x(x), y(y), z(z) {}
 
         float length() {
             return std::sqrt(x * x + y * y + z * z);
         }
 
-        vec3& operator-() {
+        Vec3& operator-() {
             x = -x;
             y = -y;
             z = -z;
             return *this;
         }
 
-        vec3& normalize() {
+        Vec3& normalize() {
             *this = (1.f / length()) * *this;
             return *this;
         }
 
 };
-typedef vec3<int> vec3i;
-typedef vec3<float> vec3f;
+typedef Vec3<int> Vec3i;
+typedef Vec3<float> Vec3f;
 
-vec3f operator*(float a, vec3f v) {
-    return vec3f(a * v.x, a * v.y, a * v.z);
-}
-
-vec3f vec3cross(vec3f a, vec3f b) {
-    return vec3f(a.y * b.z - a.z * b.y,
-                 a.z * b.x - a.x * b.z,
-                 a.x * b.y - a.y * b.x);
+template<class T>
+Vec3<T> operator*(T a, Vec3<T> V) {
+    return Vec3<T>(a * V.x, a * V.y, a * V.z);
 }
 
 template<class T>
-class vec4 {
+Vec3<T> Vec3cross(Vec3<T> a, Vec3<T> b) {
+    return Vec3<T>(a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x);
+}
+
+template<class T>
+class Vec4 {
     public:
         T x, y, z, w;
 
-        vec4() : x(0), y(0), z(0), w(0){}
-        vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+        Vec4() : x(0), y(0), z(0), w(0){}
+        Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+
 
 };
-typedef vec4<int> vec4i;
-typedef vec4<float> vec4f;
+typedef Vec4<int> Vec4i;
+typedef Vec4<float> Vec4f;
+
+template<class T>
+T Vec4dot(Vec4<T> v0, Vec4<T> v1) {
+    return v0.x * v1.x +
+           v0.y * v1.y +
+           v0.z * v1.z +
+           v0.w * v1.w;
+}
 
 
 

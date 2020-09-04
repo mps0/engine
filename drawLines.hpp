@@ -9,7 +9,7 @@
 #include "image.hpp"
 
 
-void drawLines(vec2i p0, vec2i p1, Image* image) {
+void drawLines(Vec2i p0, Vec2i p1, Image* image) {
 
     bool switchOrder = p0.x > p1.x;
 

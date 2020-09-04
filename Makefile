@@ -25,3 +25,6 @@ camera.o: camera.hpp vector.hpp
 
 pipeline.o: pipeline.hpp camera.hpp
 	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
+
+matrix.o: matrix.hpp vector.hpp
+	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
