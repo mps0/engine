@@ -19,13 +19,17 @@ class Image{
         delete[] pixels;
         }
 
-        unsigned short getWidth() {return width;}
-        unsigned short getHeight() {return height;}
-
         void setPixel(unsigned int x, unsigned int y, unsigned int val){
             
            unsigned int idx = y * width + x; 
            pixels[idx] = val;
+        }
+
+        void clear() {
+
+        
+         memset(pixels, 255, width * height * sizeof(unsigned int));
+
         }
 
 };

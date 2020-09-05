@@ -2,6 +2,7 @@
 #define VECTOR_HPP
 
 #include <cmath>
+#include<stdio.h>
 
 
 template<class T> class Vec2 {
@@ -21,6 +22,12 @@ template<class T> class Vec2 {
             T tmp = x;
             x = y;
             y = tmp;
+        }
+
+        void print() {
+
+            printf("(%i, %i)\n", x, y);
+
         }
 
 };
@@ -51,6 +58,11 @@ class Vec3 {
             return *this;
         }
 
+        void print() {
+
+            printf("(%f, %f, %f)\n", x, y, z);
+
+        }
 };
 typedef Vec3<int> Vec3i;
 typedef Vec3<float> Vec3f;
@@ -68,6 +80,13 @@ Vec3<T> Vec3cross(Vec3<T> a, Vec3<T> b) {
 }
 
 template<class T>
+T Vec3dot(Vec3<T> v0, Vec3<T> v1) {
+    return v0.x * v1.x +
+           v0.y * v1.y +
+           v0.z * v1.z;
+}
+
+template<class T>
 class Vec4 {
     public:
         T x, y, z, w;
@@ -75,10 +94,20 @@ class Vec4 {
         Vec4() : x(0), y(0), z(0), w(0){}
         Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
+        void print() {
+
+            printf("(%f, %f, %f, %f)\n", x, y, z, w);
+
+        }
 
 };
 typedef Vec4<int> Vec4i;
 typedef Vec4<float> Vec4f;
+
+template<class T>
+Vec4<T> operator*(T a, Vec4<T> V) {
+    return Vec4<T>(a * V.x, a * V.y, a * V.z, a * V.w);
+}
 
 template<class T>
 T Vec4dot(Vec4<T> v0, Vec4<T> v1) {

@@ -31,7 +31,7 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
     int x = X0;
     int y = Y0;
 
-    if(abs(dx) > abs(dy) && dy >= 0) {
+    if(abs(dx) >= abs(dy) && dy >= 0) {
         int d = 2 * dy - dx ;
         for(x = X0; x < X1 + 1; x++) {
             //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
@@ -45,7 +45,7 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
 
             d = d  + 2 * dy;
         } 
-    } else if(abs(dx) > abs(dy) && dy < 0) {
+    } else if(abs(dx) >= abs(dy) && dy < 0) {
         int d = 2 * dy + dx ;
         for(x = X0; x < X1 + 1; x++) {
             //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
