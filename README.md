@@ -1,8 +1,6 @@
-I'm writing a simple graphics engine from scratch to get better at c++ and computer graphics. Only external libray used is SDL for window management.
+I'm writing a simple game engine from scratch to learn things. Starting with a software rasterizer.
 
-
-![test](https://i.imgur.com/5wjmt2r.gif)
-
+![test](https://imgur.com/a/dHnrDyU)
 
 
 

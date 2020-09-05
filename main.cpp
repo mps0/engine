@@ -31,11 +31,14 @@ int main(void) {
     bool run = true;
     int i = 0;
     float fps = 0.f;
+    getchar();
     while(run) {
         auto exec_start = std::chrono::high_resolution_clock::now();
 
         i++;
-        i = i % 2000;
+        //i = i % 2000;
+        printf("i: %i\n",i);
+        if (i == 1000) {run = false;}
         float pi = 3.141592;
         float alpha = (i / 1000.f) * pi;
 
