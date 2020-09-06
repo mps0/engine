@@ -10,7 +10,7 @@
 #include "matrix.hpp"
 
 #define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
+#define SCREEN_HEIGHT 640
 
 int main(void) {
     SDL_Event event;
@@ -31,14 +31,11 @@ int main(void) {
     bool run = true;
     int i = 0;
     float fps = 0.f;
-    getchar();
     while(run) {
         auto exec_start = std::chrono::high_resolution_clock::now();
 
         i++;
-        //i = i % 2000;
-        printf("i: %i\n",i);
-        if (i == 1000) {run = false;}
+        i = i % 2000;
         float pi = 3.141592;
         float alpha = (i / 1000.f) * pi;
 
@@ -51,6 +48,12 @@ int main(void) {
         rotY.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
         rotY.c2 = Vec4f(sina, 0.f, cosa, 0.f);
         rotY.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+
+        Mat4f rotZ = Mat4f();
+        rotZ.c0 = Vec4f(cosa, sina, 0.f, 0.f);
+        rotZ.c1 = Vec4f(-sina, cosa, 0.f,  0.f);
+        rotZ.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
+        rotZ.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
 
         Mat4f trans = Mat4f();
         trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
@@ -66,9 +69,9 @@ int main(void) {
 
 
 
-        Vec4f p0 = Vec4f(-0.5f, -0.5f, -2.f, 1.f);
-        Vec4f p1 = Vec4f(0.5f, -0.5f, -2.f, 1.f);
-        Vec4f p2 = Vec4f(0.0f, 0.5f, -2.f, 1.f);
+        Vec4f p0 = Vec4f(-1.5f, -1.0f, -2.f, 1.f);
+        Vec4f p1 = Vec4f(1.5f, -1.0f, -2.f, 1.f);
+        Vec4f p2 = Vec4f(0.0f, 2.f, -2.f, 1.f);
 
 
         p0 = trans * p0;
@@ -76,9 +79,9 @@ int main(void) {
         p2 = trans * p2;
 
 
-        p0 = rotY * p0;
-        p1 = rotY * p1;
-        p2 = rotY * p2;
+        //p0 = rotZ * p0;
+        //p1 = rotZ * p1;
+        //p2 = rotZ * p2;
 
 
         p0 = trans2 * p0;

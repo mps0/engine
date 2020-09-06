@@ -7,6 +7,9 @@
 #include "matrix.hpp"
 #include "vector.hpp"
 
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 640
+
 
 void pipeline(Image* image, Vec4f p0, Vec4f p1, Vec4f p2) {
 
@@ -49,14 +52,17 @@ void pipeline(Image* image, Vec4f p0, Vec4f p1, Vec4f p2) {
     pp2 = (1.f / pp2.w) * pp2;
 
 
+
     Mat3f viewPort = Mat3f();
-    viewPort.c0 = Vec3f(640.f / 2.f, 0.f, 0.f);
-    viewPort.c1 = Vec3f(0.f, -480.f / 2.f, 0.f);
-    viewPort.c2 = Vec3f((640.f-1.f) / 2.f, (480.f - 1.f) / 2.f, 1.f);
+    viewPort.c0 = Vec3f(SCREEN_WIDTH / 2.f, 0.f, 0.f);
+    viewPort.c1 = Vec3f(0.f, -SCREEN_HEIGHT / 2.f, 0.f);
+    viewPort.c2 = Vec3f((SCREEN_WIDTH-1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 1.f);
 
     Vec3f pvp0 = Vec3f(pp0.x, pp0.y, 1.f);
     Vec3f pvp1 = Vec3f(pp1.x, pp1.y, 1.f);
     Vec3f pvp2 = Vec3f(pp2.x, pp2.y, 1.f);
+
+    
 
 
     Vec3f ppvp0 = viewPort * pvp0;
