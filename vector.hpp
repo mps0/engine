@@ -30,9 +30,14 @@ template<class T> class Vec2 {
 
         }
 
+        Vec2 operator-(Vec2 v) {
+            return Vec2(x - v.x, y - v.y);
+        }
+
 };
 typedef Vec2<int> Vec2i;
 typedef Vec2<float> Vec2f;
+
 
 template<class T>
 class Vec3 {
@@ -62,6 +67,10 @@ class Vec3 {
 
             printf("(%f, %f, %f)\n", x, y, z);
 
+        }
+
+        Vec3 operator-(Vec3 v) {
+            return Vec3(x - v.x, y - v.y, z - v.y);
         }
 };
 typedef Vec3<int> Vec3i;
@@ -98,6 +107,10 @@ class Vec4 {
 
             printf("(%f, %f, %f, %f)\n", x, y, z, w);
 
+        }
+
+        Vec4 operator+(Vec4 v) {
+            return Vec4(x + v.x, y + v.y, z + v.z, w + v.w);
         }
 
 };

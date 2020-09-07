@@ -12,6 +12,7 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 640
 
+
 int main(void) {
     SDL_Event event;
     SDL_Window* window;
@@ -23,7 +24,7 @@ int main(void) {
 
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_Texture * texture = SDL_CreateTexture(renderer,
-            SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
+            SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
@@ -55,44 +56,56 @@ int main(void) {
         rotZ.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
         rotZ.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
 
+        Vec4f p0 = Vec4f(-2.0f, -1.75f, -2.f, 1.f);
+        Vec4f p1 = Vec4f(2.0f, -1.75f, -2.f, 1.f);
+        Vec4f p2 = Vec4f(0.0f, std::sqrt(13.f) - 1.75f, -2.f, 1.f);
+
+        float cx = (p0.x + p1.x + p2.x) / 3.f;
+        float cy = (p0.y + p1.y + p2.y) / 3.f;
+        float cz = (p0.z + p1.z + p2.z) / 3.f;
+
+
         Mat4f trans = Mat4f();
         trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
         trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
         trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-        trans.c3 = Vec4f(0.f, 0.f, 2.f, 1.f);
+        trans.c3 = Vec4f(-cx, -cy, -cz, 1.f);
 
         Mat4f trans2 = Mat4f();
         trans2.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
         trans2.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
         trans2.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-        trans2.c3 = Vec4f(0.f, 0.f, -2.f, 1.f);
+        trans2.c3 = Vec4f(cx, cy, cz, 1.f);
 
 
-
-        Vec4f p0 = Vec4f(-1.5f, -1.0f, -2.f, 1.f);
-        Vec4f p1 = Vec4f(1.5f, -1.0f, -2.f, 1.f);
-        Vec4f p2 = Vec4f(0.0f, 2.f, -2.f, 1.f);
-
-
-        p0 = trans * p0;
-        p1 = trans * p1;
-        p2 = trans * p2;
-
+        //p0 = trans * p0; 
+        //p1 = trans * p1;
+        //p2 = trans * p2;
 
         //p0 = rotZ * p0;
         //p1 = rotZ * p1;
         //p2 = rotZ * p2;
 
 
-        p0 = trans2 * p0;
-        p1 = trans2 * p1;
-        p2 = trans2 * p2;
+        //p0 = trans2 * p0;
+        //p1 = trans2 * p1;
+        //p2 = trans2 * p2;
+
+        attributes v0, v1, v2;
+
+        v0.pos = p0;
+        v0.color = Vec4f(1.f, 0.f, 0.f, 1.f);
+        v1.pos = p1;
+        v1.color = Vec4f(0.f, 1.f, 0.f, 1.f);
+        v2.pos = p2;
+        v2.color = Vec4f(0.f, 0.f, 1.f, 1.f);
 
 
 
-        pipeline(&image, p0, p1, p2);
 
-        SDL_UpdateTexture(texture, NULL, image.pixels, SCREEN_WIDTH * sizeof(Uint32));
+        pipeline(&image, v0, v1, v2);
+
+        SDL_UpdateTexture(texture, NULL, image.pixels,  SCREEN_WIDTH * sizeof(Uint32));
         image.clear();
 
         if(SDL_PollEvent(&event) && event.type == SDL_QUIT){

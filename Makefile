@@ -5,10 +5,10 @@ CFLAGS = -w
 LFLAGS = -lSDL2
 
 
-rast: main.o drawLines.o vector.o image.o camera.o pipeline.o matrix.o
+rast: main.o drawLines.o vector.o image.o camera.o pipeline.o matrix.o drawTriangle.o
 	$(CXX) $(CFLAGS) -v -o rast main.o $(LFLAGS)
 
-main.o: main.cpp drawLines.hpp image.hpp vector.hpp pipeline.hpp matrix.hpp
+main.o: main.cpp drawLines.hpp image.hpp vector.hpp pipeline.hpp matrix.hpp drawTriangle.hpp
 	$(CXX) $(CFLAGS) -c main.cpp -o main.o
 
 drawLines.o: drawLines.hpp vector.hpp image.hpp
@@ -24,7 +24,10 @@ camera.o: camera.hpp vector.hpp
 	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
 
 pipeline.o: pipeline.hpp camera.hpp
-	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
+	$(CCXX) $(CFLAGS) -c pipeline.hpp -o pipeline.o
 
 matrix.o: matrix.hpp vector.hpp
-	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
+	$(CCXX) $(CFLAGS) -c matrix.hpp -o matrix.o
+
+drawTriangle.o: drawTriangle.hpp
+	$(CCXX) $(CFLAGS) -c drawTriangle.hpp -o drawTriangle.o

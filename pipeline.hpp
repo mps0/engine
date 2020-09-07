@@ -6,13 +6,22 @@
 #include "camera.hpp"
 #include "matrix.hpp"
 #include "vector.hpp"
+#include "drawTriangle.hpp"
+
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 640
 
+struct attributes {
+Vec4f pos;
+Vec4f color;
+};
 
-void pipeline(Image* image, Vec4f p0, Vec4f p1, Vec4f p2) {
+void pipeline(Image* image, attributes v0, attributes v1, attributes v2) {
 
+    Vec4f p0 = v0.pos;
+    Vec4f p1 = v1.pos;
+    Vec4f p2 = v2.pos;
 
     Camera cam = Camera();
 
@@ -74,9 +83,11 @@ void pipeline(Image* image, Vec4f p0, Vec4f p1, Vec4f p2) {
     Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
 
 
-    drawLines(pi0, pi1, image);
-    drawLines(pi1, pi2, image);
-    drawLines(pi2, pi0, image);
+    ///drawLines(pi0, pi1, v0.color, v1.color, image);
+    ///drawLines(pi1, pi2, v1.color, v2.color, image);
+    ///drawLines(pi2, pi0, v2.color, v0.color, image);
+
+    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, image);
 
 
 

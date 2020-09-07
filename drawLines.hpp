@@ -126,7 +126,7 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
     p1.y >>= 4;
 }
 
-void drawLines(Vec2i p0, Vec2i p1, Image* image) {
+void drawLines(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, Image* image) {
 
     cohenSutherlandClip(p0, p1);
 
@@ -136,6 +136,7 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
     if (switchOrder) {
 
         std::swap(p0, p1);
+        std::swap(c0, c1);
     }
 
     int X0 = p0.x;
@@ -151,11 +152,20 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
     int x = X0;
     int y = Y0;
 
+   Vec3i RGB = Vec3i(0, 0, 0);
+
     if(abs(dx) >= abs(dy) && dy >= 0) {
         int d = 2 * dy - dx ;
         for(x = X0; x < X1 + 1; x++) {
-            //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
-            image->setPixel(x, y, 0);
+
+            float t = (float)(x - X0) / (float)(X1 - X0); 
+            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+
+            RGB.x = (int)(RGBAf.x * 255.f);
+            RGB.y = (int)(RGBAf.y * 255.f);
+            RGB.z = (int)(RGBAf.z * 255.f);
+            
+            image->setPixel(x, y, RGB);
 
             if (d > 0) {
 
@@ -168,8 +178,14 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
     } else if(abs(dx) >= abs(dy) && dy < 0) {
         int d = 2 * dy + dx ;
         for(x = X0; x < X1 + 1; x++) {
-            //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
-            image->setPixel(x, y, 0);
+
+            float t = (float)(x - X0) / (float)(X1 - X0); 
+            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+
+            RGB.x = (int)(RGBAf.x * 255.f);
+            RGB.y = (int)(RGBAf.y * 255.f);
+            RGB.z = (int)(RGBAf.z * 255.f);
+            image->setPixel(x, y, RGB);
 
             if (d < 0) {
 
@@ -182,8 +198,13 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
     } else if (abs(dy) > abs(dx) && dy < 0) {
         int d = 2 * dx + dy ;
         for(y = Y0; y > Y1 - 1; y--) {
-            image->setPixel(x, y, 0);
-            //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
+            image->setPixel(x, y, RGB);
+            float t = (float)(Y0 - y) / (float)(Y0 - Y1); 
+
+            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            RGB.x = (int)(RGBAf.x * 255.f);
+            RGB.y = (int)(RGBAf.y * 255.f);
+            RGB.z = (int)(RGBAf.z * 255.f);
 
             if (d > 0) {
 
@@ -198,8 +219,14 @@ void drawLines(Vec2i p0, Vec2i p1, Image* image) {
         int d = 2 * dx - dy ;
 
         for(y = Y0; y < Y1 + 1; y++) {
-            image->setPixel(x, y, 0);
-            //printf("\nX0: %i  Y0:%i  X1: %i  Y1:%i  x: %i y: %i d: %i\n", X0, Y0, X1, Y1, x, y, d);
+
+            float t = (float)(y - Y0) / (float)(Y1 - Y0); 
+            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            RGB.x = (int)(RGBAf.x * 255.f);
+            RGB.y = (int)(RGBAf.y * 255.f);
+            RGB.z = (int)(RGBAf.z * 255.f);
+
+            image->setPixel(x, y, RGB);
 
             if (d > 0) {
 

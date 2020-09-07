@@ -1,6 +1,8 @@
 #ifndef IMAGE_HPP
 #define IMAGE_HPP
 
+#include "vector.hpp"
+
 
 class Image{
     public:
@@ -19,10 +21,18 @@ class Image{
         delete[] pixels;
         }
 
-        void setPixel(unsigned int x, unsigned int y, unsigned int val){
+        void setPixel(unsigned int x, unsigned int y, Vec3i RGB){
+
+           int mask = 255; //1111 1111
+           unsigned int color = 0;
+
+           color |= RGB.x;
+           color |= (RGB.y << 8);
+           color |= (RGB.z << 16);
+
             
            unsigned int idx = y * width + x; 
-           pixels[idx] = val;
+           pixels[idx] = color;
         }
 
         void clear() {
