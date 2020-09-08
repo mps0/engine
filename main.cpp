@@ -28,6 +28,11 @@ int main(void) {
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
+            int tx = 5;
+
+            float ty = tx;
+
+            printf("tx: %i, ty: %f\n", tx, ty);
 
     bool run = true;
     int i = 0;
@@ -59,6 +64,7 @@ int main(void) {
         Vec4f p0 = Vec4f(-2.0f, -1.75f, -2.f, 1.f);
         Vec4f p1 = Vec4f(2.0f, -1.75f, -2.f, 1.f);
         Vec4f p2 = Vec4f(0.0f, std::sqrt(13.f) - 1.75f, -2.f, 1.f);
+
 
         float cx = (p0.x + p1.x + p2.x) / 3.f;
         float cy = (p0.y + p1.y + p2.y) / 3.f;

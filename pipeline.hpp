@@ -83,9 +83,9 @@ void pipeline(Image* image, attributes v0, attributes v1, attributes v2) {
     Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
 
 
-    ///drawLines(pi0, pi1, v0.color, v1.color, image);
-    ///drawLines(pi1, pi2, v1.color, v2.color, image);
-    ///drawLines(pi2, pi0, v2.color, v0.color, image);
+    //drawLines(pi0, pi1, v0.color, v1.color, image);
+    //drawLines(pi1, pi2, v1.color, v2.color, image);
+    //drawLines(pi2, pi0, v2.color, v0.color, image);
 
     drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, image);
 

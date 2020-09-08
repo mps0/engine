@@ -51,6 +51,10 @@ class Vec3 {
             return std::sqrt(x * x + y * y + z * z);
         }
 
+        float lengthSq() {
+            return x * x + y * y + z * z;
+        }
+
         Vec3& operator-() {
             x = -x;
             y = -y;
