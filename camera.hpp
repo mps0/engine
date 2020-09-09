@@ -13,8 +13,8 @@ class Camera{
         Vec3f up, forward, pos;
        //Camera() : up(Vec3f(0.f, 1.f, 0.f)), forward(Vec3f(0.f, 0.f, -1.f)), pos(Vec3f(0.f, 0.f, 0.f)) {}
 
-        //Camera() : up(Vec3f(0.f, 1.f, 1.f)), forward(Vec3f(0.f, 1.f, -1.f)), pos(Vec3f(0.f, -1.f, 0.f)) {}
-        Camera() : up(Vec3f(0.f, 1.f, 1.f)), forward(Vec3f(0.f, 1.f, -1.f)), pos(Vec3f(0.f, -1.f, 0.f)) {}
+       Camera() : up(Vec3f(0.f, 1.f, 0.f)), forward(Vec3f(0.f, 1.3f, -1.f)), pos(Vec3f(-.1f, -.2f, 0.3f)) {}
+
 
         Camera(Vec3f up, Vec3f forward, Vec3f pos) : up(up), forward(forward), pos(pos) {}
 

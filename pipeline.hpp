@@ -19,7 +19,7 @@ Vec4f color;
 };
 
 //void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
-void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
+void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool full) {
 
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
@@ -57,6 +57,11 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
     Vec4f pp1 = VP * p1;
     Vec4f pp2 = VP * p2;
 
+    
+    float z0 = pp0.w;
+    float z1 = pp1.w;
+    float z2 = pp2.w;
+
     pp0 = (1.f / pp0.w) * pp0;
     pp1 = (1.f / pp1.w) * pp1;
     pp2 = (1.f / pp2.w) * pp2;
@@ -84,15 +89,19 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
     Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
 
 
-    //drawLines(pi0, pi1, v0.color, v1.color, image);
-    //drawLines(pi1, pi2, v1.color, v2.color, image);
-    //drawLines(pi2, pi0, v2.color, v0.color, image);
-    //
+    if (!full){
+    drawLines(pi0, pi1, v0.color, v1.color, z0, z1, image);
+    drawLines(pi1, pi2, v1.color, v2.color, z1, z2, image);
+    drawLines(pi2, pi0, v2.color, v0.color, z2, z0, image);
+    } 
+    else {
+    
 
 
 //        printf("pi0.x: %i, pi0.y : %i, p1.0x : %i, p1.y: %i, p2.x: %i, p2.y: %i\n",pi0.x, pi0.y, pi1.x, pi1.y, pi2.x, pi2.y);
-    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, image);
+    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
 
+    }
 
 
 

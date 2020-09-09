@@ -72,7 +72,8 @@
  * F(x, y + 1) = Ax + B(y + 1) + C = Ax + By + B + C = F(x,y) + B
  */
 
-void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Image* image) {
+//void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Image* image) {
+void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, float z0, float z1, float z2, Image* image) {
 
 
     int x0, y0, x1, y1, x2, y2;
@@ -155,8 +156,8 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Im
                         //int B = RGBAf.z; 
 
                         
-
-                        image->setPixel(x, y, Vec3i(R, G, B));
+                        float depth = alpha * z0 + beta * z1 + gamma * z2;
+                        image->setPixel(x, y, Vec3i(R, G, B),depth);
 
                     }
                 }

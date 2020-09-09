@@ -37,7 +37,7 @@ int main(void) {
             printf("tx: %i, ty: %f\n", tx, ty);
 
         Asset* asset2 = new Grid(Vec3f(0.f, 0.f, 0.f), 2.f, 2.f, 25, 25);
-        Asset* asset = new Box(Vec3f(0.f, 0.f, -.25f), 0.5f, 0.5f, 0.5f);
+        Asset* asset = new Box(Vec3f(0.f, 0.f, 0.f), 0.1f, 0.1f, 0.1f);
 
     bool run = true;
     int i = 0;
@@ -133,7 +133,26 @@ int main(void) {
          //printf("p2.x: %f, p2.y: %f, p2.z: %f, p2.w %f\n", v2.pos.x, v2.pos.y, v2.pos.z, v2.pos.w);
 
 
-        pipeline(&image, v0, v1, v2);
+        pipeline(&image, v0, v1, v2, true);
+
+        }
+       
+       for(int k = 0; k < asset2->num_triangles; k++) {
+        
+            v0 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k]];
+            v0.color = Vec4f(1.f, 1.f, 1.f, 1.f);
+
+            v1 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k + 1]];
+            v1.color = Vec4f(1.f, 1.f, 1.f, 1.f);
+
+            v2 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k + 2]];
+            v2.color = Vec4f(1.f, 1.f, 1.f, 1.f);
+         //printf("p0.x: %f, p0.y: %f, p0.z: %f, p0.w %f\n", v0.pos.x, v0.pos.y, v0.pos.z, v0.pos.w);
+         //printf("p1.x: %f, p1.y: %f, p1.z: %f, p1.w %f\n", v1.pos.x, v1.pos.y, v1.pos.z, v1.pos.w);
+         //printf("p2.x: %f, p2.y: %f, p2.z: %f, p2.w %f\n", v2.pos.x, v2.pos.y, v2.pos.z, v2.pos.w);
+
+
+        pipeline(&image, v0, v1, v2, false);
 
         }
 
