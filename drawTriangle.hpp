@@ -96,11 +96,22 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Im
     else if (x1 > xMax) xMax = x1;
     if(y1 < yMin) yMin = y1;
     else if (y1 > yMax) yMax = y1;
-
     if (x2 < xMin) xMin = x2;
     else if (p2.x > xMax) xMax = x2;
     if(y2 < yMin) yMin = y2;
     else if (p2.y > yMax) yMax = y2;
+
+
+    //simple clipping
+    if (xMin < 0) xMin = 0;
+    else if(xMin > 639) xMin = 639;
+    if (yMin < 0) yMin = 0;
+    else if(yMin > 639) yMin = 639;
+
+    if (xMax > 639) xMax = 639;
+    else if(xMax < 0) xMax = 0;
+    if (yMax > 639) yMax = 639;
+    else if(yMax < 0) yMax = 0;
 
     int A21 = y1 - y2;
     int B21 = x2 - x1; 
@@ -121,35 +132,31 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Im
     float f01x2y2 = A01 * x2  + B01 * y2 + C01;
 
 
-    Vec3i RGB = Vec3i(0, 0, 0);
     int x, y;
     for(y = yMin; y < yMax + 1; y++) {
         for(x = xMin; x < xMax + 1; x++) {
-
-
-            //          float f21xy = A21 * x  + B21 * y + C21;
-
-            //float f20xy = A20 * x  + B20 * y + C20;
-
-            //float f01xy = A01 * x  + B01 * y + C01;
 
             float alpha = f21xy / f21x0y0;
             float beta = f20xy / f20x1y1;
             float gamma = f01xy / f01x2y2;
 
-            if (alpha > 0.f) {
-                if (beta > 0.f) {
-                    if (gamma > 0.f) {
+            if (alpha >= 0.f) {
+                if (beta >= 0.f) {
+                    if (gamma >= 0.f) {
 
                         int R = alpha * 255.f; 
                         int G = beta * 255.f; 
                         int B = gamma * 255.f; 
 
-                        RGB.x = R;
-                        RGB.y = G;
-                        RGB.z = B;
+                        
+                        //Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
+                        //int R = RGBAf.x; 
+                        //int G = RGBAf.y; 
+                        //int B = RGBAf.z; 
 
-                        image->setPixel(x, y, RGB);
+                        
+
+                        image->setPixel(x, y, Vec3i(R, G, B));
 
                     }
                 }

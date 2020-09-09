@@ -7,17 +7,19 @@
 #include "matrix.hpp"
 #include "vector.hpp"
 #include "drawTriangle.hpp"
+#include "drawLines.hpp"
 
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 640
 
-struct attributes {
+struct Attributes {
 Vec4f pos;
 Vec4f color;
 };
 
-void pipeline(Image* image, attributes v0, attributes v1, attributes v2) {
+//void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
+void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
 
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
@@ -43,7 +45,6 @@ void pipeline(Image* image, attributes v0, attributes v1, attributes v2) {
 
 
     float d = 1.f;
-
     Mat4f persp = Mat4f();
     persp.c0 = Vec4f(d, 0.f, 0.f, 0.f);
     persp.c1 = Vec4f(0.f, d, 0.f, 0.f);
@@ -86,7 +87,10 @@ void pipeline(Image* image, attributes v0, attributes v1, attributes v2) {
     //drawLines(pi0, pi1, v0.color, v1.color, image);
     //drawLines(pi1, pi2, v1.color, v2.color, image);
     //drawLines(pi2, pi0, v2.color, v0.color, image);
+    //
 
+
+//        printf("pi0.x: %i, pi0.y : %i, p1.0x : %i, p1.y: %i, p2.x: %i, p2.y: %i\n",pi0.x, pi0.y, pi1.x, pi1.y, pi2.x, pi2.y);
     drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, image);
 
 
