@@ -36,7 +36,8 @@ int main(void) {
 
             printf("tx: %i, ty: %f\n", tx, ty);
 
-        Checkerboard* board = new Checkerboard(Vec3f(0.f, 0.f, 0.f), 2.f, 2.f, 4, 4);
+        Asset* asset2 = new Grid(Vec3f(0.f, 0.f, 0.f), 2.f, 2.f, 25, 25);
+        Asset* asset = new Box(Vec3f(0.f, 0.f, -.25f), 0.5f, 0.5f, 0.5f);
 
     bool run = true;
     int i = 0;
@@ -117,15 +118,15 @@ int main(void) {
 
 
         Attributes v0, v1, v2;
-        for(int k = 0; k < board->num_triangles; k++) {
+       for(int k = 0; k < asset->num_triangles; k++) {
         
-            v0 = board->Asset::vBuffer[board->Asset::iBuffer[3 * k]];
+            v0 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k]];
             v0.color = Vec4f(0.f, 0.f, 0.f, 1.f);
 
-            v1 = board->Asset::vBuffer[board->Asset::iBuffer[3 * k + 1]];
+            v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
             v1.color = Vec4f(0.f, 0.f, 0.f, 1.f);
 
-            v2 = board->Asset::vBuffer[board->Asset::iBuffer[3 * k + 2]];
+            v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
             v2.color = Vec4f(0.f, 0.f, 0.f, 1.f);
          //printf("p0.x: %f, p0.y: %f, p0.z: %f, p0.w %f\n", v0.pos.x, v0.pos.y, v0.pos.z, v0.pos.w);
          //printf("p1.x: %f, p1.y: %f, p1.z: %f, p1.w %f\n", v1.pos.x, v1.pos.y, v1.pos.z, v1.pos.w);
@@ -135,6 +136,7 @@ int main(void) {
         pipeline(&image, v0, v1, v2);
 
         }
+
 
 
         SDL_UpdateTexture(texture, NULL, image.pixels,  SCREEN_WIDTH * sizeof(Uint32));
