@@ -21,7 +21,7 @@ class Box : public Asset {
        Vec3f origin;
        float width, length, height;
 
-       Box(Vec3f origin, float length, float width, float height) :
+       Box(Vec3f origin, float width, float length, float height) :
    origin(origin), width(width), length(length), height(height) {
 
        
@@ -30,7 +30,6 @@ class Box : public Asset {
    Vec4f p1 = Vec4f(0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
    Vec4f p2 = Vec4f(-0.5f * width + origin.x, 0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
    Vec4f p3 = Vec4f(0.5f * width + origin.x, 0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
-   
 
    Vec4f p4 = p0 + Vec4f(0.f, 0.f, height, 0.f);
    Vec4f p5 = p1 + Vec4f(0.f, 0.f, height, 0.f);
@@ -115,6 +114,11 @@ class Box : public Asset {
 
 
 
+       ~Box() {
+        delete[] vBuffer;
+        delete[] iBuffer; 
+       }
+
 
 };
 
@@ -146,7 +150,7 @@ class Grid : public Asset {
                 for (int i = 0; i < rows + 1; i++) {
                     for (int j = 0; j < cols + 1; j++) {
 
-                        vBuffer[i * (cols + 1) + j].pos = Vec4f(j * xstep + xstart, ystart - i* ystep, -1.f, 1.f);
+                        vBuffer[i * (cols + 1) + j].pos = Vec4f(j * xstep + xstart, ystart - i* ystep, origin.z, 1.f);
                     }
                 }
 
@@ -164,6 +168,11 @@ class Grid : public Asset {
                     }
                 }
             }
+
+       ~Grid() {
+        delete[] vBuffer;
+        delete[] iBuffer; 
+       }
 };
 
 

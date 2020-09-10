@@ -30,14 +30,8 @@ int main(void) {
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-            int tx = 5;
-
-            float ty = tx;
-
-            printf("tx: %i, ty: %f\n", tx, ty);
-
-        Asset* asset2 = new Grid(Vec3f(0.f, 0.f, 0.f), 2.f, 2.f, 25, 25);
-        Asset* asset = new Box(Vec3f(0.f, 0.f, 0.f), 0.1f, 0.1f, 0.1f);
+        Asset* asset2 = new Grid(Vec3f(0.f, 0.f, -1.f), 1.f, 1.f, 1, 1);
+        Asset* asset = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.f);
 
     bool run = true;
     int i = 0;
