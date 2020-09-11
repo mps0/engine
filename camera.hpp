@@ -22,7 +22,7 @@ class Camera{
         }
        
     void roll(int xrel) {
-		float rotationX = -mouseSense * xrel;
+		float rotationX = mouseSense * xrel;
     
         Vec3f upNew;
         upNew = cos(rotationX) * up - sin(rotationX) * u;
@@ -34,8 +34,8 @@ class Camera{
 
 	void rotate(int xrel, int yrel) {
 
-		float rotationX = -mouseSense * xrel;
-		float rotationY = -mouseSense * yrel;
+		float rotationX = mouseSense * xrel;
+		float rotationY = mouseSense * yrel;
 
         Vec3f forwardNew, upNew;
       //pitch
@@ -45,7 +45,7 @@ class Camera{
         up = upNew;
 
        //yaw
-        forwardNew = cos(rotationX) * forward - sin(rotationX) * u;
+        forwardNew = cos(rotationX) * forward + sin(rotationX) * u;
         forward = forwardNew;
 
 

@@ -33,12 +33,11 @@ int main(void) {
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    Asset* grid = new Grid(Vec3f(0.f, 0.f, -2.f), 3.f, 3.f, 10, 10);
-    Asset* box = new Box(Vec3f(0.f, 0.f, -1.75f), 0.5f, 0.5f, 0.5f);
+    Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2); //Asset* box = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.5f);
 
     std::vector<Asset*> assets;
     assets.push_back(grid);
-    assets.push_back(box);
+    //assets.push_back(box);
 
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
 
@@ -56,8 +55,7 @@ int main(void) {
                 case SDL_MOUSEMOTION:{
                     unsigned int button = SDL_GetMouseState(NULL, NULL);
                     if (button & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                        //mouse_fn(Left, event.motion.xrel, event.motion.yrel);
-                        cam->rotate(event.motion.xrel, event.motion.yrel);
+                        cam->rotate(event.motion.xrel, -event.motion.yrel);
                     }
                     else if (button & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
                         cam->roll(event.motion.xrel);
