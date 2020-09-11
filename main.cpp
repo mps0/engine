@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <chrono>
 #include <cmath>
+#include <vector>
 
-#include "drawLines.hpp"
+#include "drawLine.hpp"
 #include "image.hpp"
 #include "vector.hpp"
 #include "pipeline.hpp"
@@ -30,8 +31,12 @@ int main(void) {
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        Asset* asset2 = new Grid(Vec3f(0.f, 0.f, -1.f), 1.f, 1.f, 1, 1);
-        Asset* asset = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.f);
+
+
+    std::vector<Asset*> assets;
+    assets.push_back(new Grid(Vec3f(0.f, 0.f, -2.f), 2.f, 2.f, 2, 2));
+    assets.push_back(new Box(Vec3f(0.f, 0.f, -1.75f), 0.5f, 0.5f, 0.5f));
+
 
     bool run = true;
     int i = 0;
@@ -112,44 +117,22 @@ int main(void) {
 
 
         Attributes v0, v1, v2;
-       for(int k = 0; k < asset->num_triangles; k++) {
+       for(Asset* asset : assets) {
+        for(int  k = 0; k < asset->num_triangles; k++) {
         
             v0 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k]];
-            v0.color = Vec4f(0.f, 0.f, 0.f, 1.f);
-
-            v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
-            v1.color = Vec4f(0.f, 0.f, 0.f, 1.f);
-
-            v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
-            v2.color = Vec4f(0.f, 0.f, 0.f, 1.f);
-         //printf("p0.x: %f, p0.y: %f, p0.z: %f, p0.w %f\n", v0.pos.x, v0.pos.y, v0.pos.z, v0.pos.w);
-         //printf("p1.x: %f, p1.y: %f, p1.z: %f, p1.w %f\n", v1.pos.x, v1.pos.y, v1.pos.z, v1.pos.w);
-         //printf("p2.x: %f, p2.y: %f, p2.z: %f, p2.w %f\n", v2.pos.x, v2.pos.y, v2.pos.z, v2.pos.w);
-
-
-        pipeline(&image, v0, v1, v2, true);
-
-        }
-       
-       for(int k = 0; k < asset2->num_triangles; k++) {
-        
-            v0 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k]];
             v0.color = Vec4f(1.f, 1.f, 1.f, 1.f);
 
-            v1 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k + 1]];
+            v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
             v1.color = Vec4f(1.f, 1.f, 1.f, 1.f);
 
-            v2 = asset2->Asset::vBuffer[asset2->Asset::iBuffer[3 * k + 2]];
+            v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
             v2.color = Vec4f(1.f, 1.f, 1.f, 1.f);
-         //printf("p0.x: %f, p0.y: %f, p0.z: %f, p0.w %f\n", v0.pos.x, v0.pos.y, v0.pos.z, v0.pos.w);
-         //printf("p1.x: %f, p1.y: %f, p1.z: %f, p1.w %f\n", v1.pos.x, v1.pos.y, v1.pos.z, v1.pos.w);
-         //printf("p2.x: %f, p2.y: %f, p2.z: %f, p2.w %f\n", v2.pos.x, v2.pos.y, v2.pos.z, v2.pos.w);
-
 
         pipeline(&image, v0, v1, v2, false);
-
         }
-
+       }
+       
 
 
         SDL_UpdateTexture(texture, NULL, image.pixels,  SCREEN_WIDTH * sizeof(Uint32));

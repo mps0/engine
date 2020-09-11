@@ -7,7 +7,7 @@
 #include "matrix.hpp"
 #include "vector.hpp"
 #include "drawTriangle.hpp"
-#include "drawLines.hpp"
+#include "drawLine.hpp"
 
 
 #define SCREEN_WIDTH 640
@@ -90,9 +90,9 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool fu
 
 
     if (!full){
-    drawLines(pi0, pi1, v0.color, v1.color, z0, z1, image);
-    drawLines(pi1, pi2, v1.color, v2.color, z1, z2, image);
-    drawLines(pi2, pi0, v2.color, v0.color, z2, z0, image);
+    drawLine(pi0, pi1, v0.color, v1.color, z0, z1, image);
+    drawLine(pi1, pi2, v1.color, v2.color, z1, z2, image);
+    drawLine(pi2, pi0, v2.color, v0.color, z2, z0, image);
     } 
     else {
     
