@@ -10,39 +10,37 @@
 #include "drawLine.hpp"
 
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
-
 struct Attributes {
     Vec4f pos;
     Vec4f color;
 };
 
-void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
+void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera* cam) {
 
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
     Vec4f p2 = v2.pos;
 
-    Camera cam = Camera();
 
+    //transform from world-space to cam->ra space
+    //first match rotation
     Mat4f rot = Mat4f();
-    rot.c0 = Vec4f(cam.u.x, cam.v.x, cam.w.x, 0.f);
-    rot.c1 = Vec4f(cam.u.y, cam.v.y, cam.w.y, 0.f);
-    rot.c2 = Vec4f(cam.u.z, cam.v.z, cam.w.z, 0.f);
+    rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
+    rot.c1 = Vec4f(cam->u.y, cam->v.y, cam->w.y, 0.f);
+    rot.c2 = Vec4f(cam->u.z, cam->v.z, cam->w.z, 0.f);
     rot.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
-
-
+    //now, line up origins
     Mat4f trans = Mat4f();
     trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
     trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
     trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-    trans.c3 = Vec4f(-cam.pos.x, -cam.pos.y, -cam.pos.z, 1.f);
-
-
+    trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
+    //combine
     Mat4f view = rot * trans;
 
 
+    //perspective transform, with image plane a distance, d, from
+    //cam->ra focal point
     float d = 1.f;
     Mat4f persp = Mat4f();
     persp.c0 = Vec4f(d, 0.f, 0.f, 0.f);
@@ -56,7 +54,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
     Vec4f pp1 = VP * p1;
     Vec4f pp2 = VP * p2;
 
-
+    //save depths for depth buffer
     float z0 = pp0.w;
     float z1 = pp1.w;
     float z2 = pp2.w;
@@ -66,7 +64,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
     pp2 = (1.f / pp2.w) * pp2;
 
 
-
+    //viewport transformation
     Mat3f viewPort = Mat3f();
     viewPort.c0 = Vec3f(SCREEN_WIDTH / 2.f, 0.f, 0.f);
     viewPort.c1 = Vec3f(0.f, -SCREEN_HEIGHT / 2.f, 0.f);
@@ -75,8 +73,6 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
     Vec3f pvp0 = Vec3f(pp0.x, pp0.y, 1.f);
     Vec3f pvp1 = Vec3f(pp1.x, pp1.y, 1.f);
     Vec3f pvp2 = Vec3f(pp2.x, pp2.y, 1.f);
-
-
 
 
     Vec3f ppvp0 = viewPort * pvp0;

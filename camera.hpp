@@ -9,18 +9,58 @@
 
 class Camera{
     public:
+        float sensitivity = 0.1f;
+        float mouseSense = 0.01f;
 
         Vec3f up, forward, pos;
-//       Camera() : up(Vec3f(0.f, 1.f, 0.f)), forward(Vec3f(0.f, 0.f, -1.f)), pos(Vec3f(0.f, 0.f, 0.f)) {}
+        Vec3f w, u, v;
 
-       Camera() : up(Vec3f(0.f, 1.f, 0.f)), forward(Vec3f(0.f, 0.f, -1.f)), pos(Vec3f(-.5f, 0.f, 0.f)) {}
+        Camera(Vec3f up, Vec3f forward, Vec3f pos) : up(up), forward(forward), pos(pos) {
+        
+        update();
+        
+        }
+       
+    void roll(int xrel) {
+		float rotationX = -mouseSense * xrel;
+    
+        Vec3f upNew;
+        upNew = cos(rotationX) * up - sin(rotationX) * u;
+
+        up = upNew;
+        
+        update();
+    }
+
+	void rotate(int xrel, int yrel) {
+
+		float rotationX = -mouseSense * xrel;
+		float rotationY = -mouseSense * yrel;
+
+        Vec3f forwardNew, upNew;
+      //pitch
+        forwardNew = cos(rotationY) * forward + sin(rotationY) * up; 
+        upNew = cos(rotationY) * up - sin(rotationY) * forward;
+        forward = forwardNew;
+        up = upNew;
+
+       //yaw
+        forwardNew = cos(rotationX) * forward - sin(rotationX) * u;
+        forward = forwardNew;
 
 
-        Camera(Vec3f up, Vec3f forward, Vec3f pos) : up(up), forward(forward), pos(pos) {}
+        update();
+	}
 
-        Vec3f w = -forward.normalize();
-        Vec3f u = Vec3cross(up, w).normalize();
-        Vec3f v = Vec3cross(w, u);
+
+
+        void update() {
+
+         w = -forward.normalize();
+         u = Vec3cross(up, w).normalize();
+         v = Vec3cross(w, u);
+
+        }
 };
 
 #endif

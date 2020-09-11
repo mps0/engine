@@ -62,9 +62,8 @@ class Vec3 {
             return *this;
         }
 
-        Vec3& normalize() {
-            *this = (1.f / length()) * *this;
-            return *this;
+        Vec3 normalize() {
+            return (1.f / length()) * *this;
         }
 
         void print() {
@@ -74,7 +73,11 @@ class Vec3 {
         }
 
         Vec3 operator-(Vec3 v) {
-            return Vec3(x - v.x, y - v.y, z - v.y);
+            return Vec3(x - v.x, y - v.y, z - v.z);
+        }
+
+        Vec3 operator+(Vec3 v) {
+            return Vec3(x + v.x, y + v.y, z + v.z);
         }
 };
 typedef Vec3<int> Vec3i;

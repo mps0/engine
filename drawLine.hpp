@@ -137,7 +137,7 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
  * is the driving axis. This is the midpoint drawing algorithm and what we are
  * essentially doing is chosing the next pixel in the line as the one to the right,
  * (x + 1, y) or the one to the right and up (x + 1, y + 1). To do this, we 
- * evaluate the function as we draw it and keep track of the accumulated error
+ * evaluate the line function as we draw it and keep track of the accumulated error
  * through a decision variable. The function is evaluated at F(x + 1, y + 0.5) 
  * noting that when a point is above the line F(x + 1, y + 0.5) will be positive,
  * when on it 0, and when below it negative.
@@ -169,8 +169,7 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
  *
  *
  * Since we only care about the signs of the D's, we can multiply them all by 2 to get 
- * rid of the 0.5 factor in D0, and do everything in terms of (faster) integer
- * math:
+ * rid of the 0.5 factor in D0, and do everything in integer math:
  *
  * D0 = 2 * dy - dx
  *
@@ -208,7 +207,6 @@ void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image*
     int y = Y0;
 
    Vec3i RGB = Vec3i(0, 0, 0);
-
     if(abs(dx) >= abs(dy) && dy >= 0) {
         int d = 2 * dy - dx ;
         for(x = X0; x < X1 + 1; x++) {

@@ -38,6 +38,7 @@ class Box : public Asset {
 
                 num_triangles = 12;
                 num_vertices = 8;
+                Vec4f color = Vec4f(1.f, 0.f, 0.f, 1.f);
 
                 Vec4f p0 = Vec4f(-0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
                 Vec4f p1 = Vec4f(0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
@@ -62,7 +63,6 @@ class Box : public Asset {
                 vBuffer[7].pos = p7;
 
 
-                Vec4f color = Vec4f(1.f, 1.f, 1.f, 1.f);
                 vBuffer[0].color = color; 
                 vBuffer[0].color = color; 
                 vBuffer[1].color = color; 

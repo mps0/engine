@@ -1,8 +1,12 @@
 I'm writing a simple game engine from scratch to learn things. Starting with a software rasterizer.
 
-![test](https://i.imgur.com/dWATNSL.gif)
+~[](vids/wireframe_grid_cube.webm)
 
-![test](https://i.imgur.com/GUK9xVz.png)
+![](vids/box_barycentric_grid.png)
+
+![](vids/spinning_triangle.gif)
+
+
 
 
 
