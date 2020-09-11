@@ -14,12 +14,11 @@
 #define SCREEN_HEIGHT 640
 
 struct Attributes {
-Vec4f pos;
-Vec4f color;
+    Vec4f pos;
+    Vec4f color;
 };
 
-//void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
-void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool full) {
+void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2) {
 
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
@@ -57,7 +56,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool fu
     Vec4f pp1 = VP * p1;
     Vec4f pp2 = VP * p2;
 
-    
+
     float z0 = pp0.w;
     float z1 = pp1.w;
     float z2 = pp2.w;
@@ -77,7 +76,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool fu
     Vec3f pvp1 = Vec3f(pp1.x, pp1.y, 1.f);
     Vec3f pvp2 = Vec3f(pp2.x, pp2.y, 1.f);
 
-    
+
 
 
     Vec3f ppvp0 = viewPort * pvp0;
@@ -89,28 +88,16 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, bool fu
     Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
 
 
-    if (!full){
     drawLine(pi0, pi1, v0.color, v1.color, z0, z1, image);
     drawLine(pi1, pi2, v1.color, v2.color, z1, z2, image);
     drawLine(pi2, pi0, v2.color, v0.color, z2, z0, image);
-    } 
-    else {
-    
 
-
-//        printf("pi0.x: %i, pi0.y : %i, p1.0x : %i, p1.y: %i, p2.x: %i, p2.y: %i\n",pi0.x, pi0.y, pi1.x, pi1.y, pi2.x, pi2.y);
-    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
-
-    }
+    //drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
 
 
 
-
-
-
-
-
-
+    //        printf("pi0.x: %i, pi0.y : %i, p1.0x : %i, p1.y: %i, p2.x: %i, p2.y: %i\n",pi0.x, pi0.y, pi1.x, pi1.y, pi2.x, pi2.y);
+    //
 }
 
 

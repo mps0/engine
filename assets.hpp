@@ -9,9 +9,21 @@ class Asset{
     public:
         Attributes*   vBuffer;
         int*    iBuffer;
+        int num_vertices;
         int num_triangles;
 
         Asset() : vBuffer(nullptr), iBuffer(nullptr) {}
+
+        Asset(int num_vertices, int num_triangles) : num_vertices(num_vertices), num_triangles(num_triangles)  {
+
+            vBuffer = new Attributes[num_vertices];
+            iBuffer = new int[num_triangles];
+
+        }
+        ~Asset() {
+            delete[] vBuffer;
+            delete[] iBuffer; 
+        }
 };
 
 
@@ -24,7 +36,8 @@ class Box : public Asset {
         Box(Vec3f origin, float width, float length, float height) :
             origin(origin), width(width), length(length), height(height) {
 
-
+                num_triangles = 12;
+                num_vertices = 8;
 
                 Vec4f p0 = Vec4f(-0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
                 Vec4f p1 = Vec4f(0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
@@ -36,7 +49,8 @@ class Box : public Asset {
                 Vec4f p6 = p2 + Vec4f(0.f, 0.f, height, 0.f);
                 Vec4f p7 = p3 + Vec4f(0.f, 0.f, height, 0.f);
 
-                vBuffer = new Attributes[8];
+                vBuffer = new Attributes[num_vertices];
+                vBuffer[0].pos = p0;
                 vBuffer[0].pos = p0;
                 vBuffer[1].pos = p1;
                 vBuffer[2].pos = p2;
@@ -48,10 +62,20 @@ class Box : public Asset {
                 vBuffer[7].pos = p7;
 
 
-                iBuffer = new int[6 * 6];
+                Vec4f color = Vec4f(1.f, 1.f, 1.f, 1.f);
+                vBuffer[0].color = color; 
+                vBuffer[0].color = color; 
+                vBuffer[1].color = color; 
+                vBuffer[2].color = color; 
+                vBuffer[3].color = color; 
+                                        ;
+                vBuffer[4].color = color; 
+                vBuffer[5].color = color; 
+                vBuffer[6].color = color; 
+                vBuffer[7].color = color; 
 
-                num_triangles = 12;
 
+                iBuffer = new int[num_triangles * 3];
                 //bottom face
                 iBuffer[0] = 0;
                 iBuffer[1] = 2;
@@ -107,19 +131,7 @@ class Box : public Asset {
                 iBuffer[10] = 1;
                 iBuffer[11] = 0;
 
-
-
             }
-
-
-
-
-        ~Box() {
-            delete[] vBuffer;
-            delete[] iBuffer; 
-        }
-
-
 };
 
 
@@ -134,9 +146,12 @@ class Grid : public Asset {
         Grid (Vec3f origin, float width, float length, int rows, int cols) : 
             origin(origin), width(width), length(length), rows(rows), cols(cols) {
 
+                num_vertices = (rows + 1) * (cols + 1);
                 num_triangles = rows * cols * 2;
 
-                vBuffer = new Attributes[(rows + 1) * (cols + 1)];
+                Vec4f color = Vec4f(1.f, 1.f, 1.f, 1.f);
+
+                vBuffer = new Attributes[num_vertices];
                 iBuffer = new int[num_triangles * 3];
 
 
@@ -151,6 +166,7 @@ class Grid : public Asset {
                     for (int j = 0; j < cols + 1; j++) {
 
                         vBuffer[i * (cols + 1) + j].pos = Vec4f(j * xstep + xstart, ystart - i* ystep, origin.z, 1.f);
+                        vBuffer[i * (cols + 1) + j].color = color;
                     }
                 }
 
@@ -169,10 +185,6 @@ class Grid : public Asset {
                 }
             }
 
-        ~Grid() {
-            delete[] vBuffer;
-            delete[] iBuffer; 
-        }
 };
 
 
