@@ -147,15 +147,16 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
                 if (beta >= 0.f) {
                     if (gamma >= 0.f) {
 
-                        int R = alpha * 255.f; 
-                        int G = beta * 255.f; 
-                        int B = gamma * 255.f; 
+                        //int R = alpha * 255.f; 
+                        //int G = beta * 255.f; 
+                        //int B = gamma * 255.f; 
+
 
                         
-                        //Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
-                        //int R = RGBAf.x; 
-                        //int G = RGBAf.y; 
-                        //int B = RGBAf.z; 
+                        Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
+                        int R = RGBAf.x * 255.f; 
+                        int G = RGBAf.y * 255.f; 
+                        int B = RGBAf.z * 255.f; 
 
                         
                         float depth = alpha * z0 + beta * z1 + gamma * z2;

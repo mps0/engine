@@ -17,6 +17,10 @@ struct Attributes {
 
 void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera* cam) {
 
+    Vec4f c0 = v0.color;
+    Vec4f c1 = v1.color;
+    Vec4f c2 = v2.color;
+
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
     Vec4f p2 = v2.pos;
@@ -132,6 +136,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
         //pp0 = VP * p0;
 
         pp0 = pp0 + t * (pp1 - pp0);
+        c0 = c0 + t * (c1 - c0);
 
     }
     float fLeftp2 = ALeft * p2.x + BLeft * p2.y + CLeft * p2.z + DLeft;
@@ -148,6 +153,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
         //pp0 = VP * p0;
 
         pp2 = pp2 + t * (pp1 - pp2);
+        c2 = c2 + t * (c1 - c2);
 
     }
 
@@ -200,11 +206,11 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
 
     
 
-    //drawLine(pi0, pi1, v0.color, v1.color, z0, z1, image);
-    //drawLine(pi1, pi2, v1.color, v2.color, z1, z2, image);
-    //drawLine(pi2, pi0, v2.color, v0.color, z2, z0, image);
+    //drawLine(pi0, pi1, c0, c1, z0, z1, image);
+    //drawLine(pi1, pi2, c1, c2, z1, z2, image);
+    //drawLine(pi2, pi0, c2, c0, z2, z0, image);
 
-    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
+    drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
 
 
 
