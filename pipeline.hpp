@@ -8,14 +8,11 @@
 #include "vector.hpp"
 #include "drawTriangle.hpp"
 #include "drawLine.hpp"
+#include "plane.hpp"
+#include "vertex.hpp"
 
 
-struct Attributes {
-    Vec4f pos;
-    Vec4f color;
-};
-
-void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera* cam) {
+void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
     Vec4f c0 = v0.color;
     Vec4f c1 = v1.color;
@@ -113,49 +110,77 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
     float CLeft = VP.c2.x + VP.c2.w;
     float DLeft = VP.c3.x + VP.c3.w;
 
+    Plane LEFT = Plane(ALeft, BLeft, CLeft, DLeft);
 
-    Vec3f npLeft = Vec3f(ALeft, BLeft, CLeft);
     
-    printf("A: %f, B: %f, C: %f, D: %f\n", ALeft, BLeft, CLeft, DLeft);
+    Vertex vpp0, vpp1, vpp2;
+
+    vpp0.pos = pp0;
+    vpp0.color = v0.color;
+
+    vpp1.pos = pp1;
+    vpp1.color = v1.color;
+
+    vpp2.pos = pp2;
+    vpp2.color = v2.color;
+
+    Vertex* newTris = LEFT.triangleIntersection(v0, v1, v2, vpp0, vpp1, vpp2);
+
+    pp0 = newTris[0].pos;
+    c0 = newTris[0].color;
+
+    pp1 = newTris[1].pos;
+    c1 = newTris[1].color;
+
+    pp2 = newTris[2].pos;
+    c2 = newTris[2].color;
+
+    //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
 
 
-    printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
-    float fLeftp0 = ALeft * p0.x + BLeft * p0.y + CLeft * p0.z + DLeft;
-    printf("fLeftp0: %f\n",fLeftp0);
+    //Vec3f npLeft = Vec3f(ALeft, BLeft, CLeft);
+    //
+    //printf("A: %f, B: %f, C: %f, D: %f\n", ALeft, BLeft, CLeft, DLeft);
 
 
-    if (fLeftp0 > 0) {
 
-        float npDota = Vec3dot(npLeft,Vec3f(p0.x, p0.y, p0.z));
-        float npDotabdif = Vec3dot(npLeft, (Vec3f(p0.x, p0.y, p0.z) - Vec3f(p1.x, p1.y, p1.z)));
+    //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
+    //float fLeftp0 = ALeft * p0.x + BLeft * p0.y + CLeft * p0.z + DLeft;
+    //printf("fLeftp0: %f\n",fLeftp0);
 
-        float t = (npDota + DLeft) /npDotabdif;
 
-        printf("t: %f\n",t);
-        //p0 = p0 + t * (p1 - p0);
-        //pp0 = VP * p0;
+    //if (fLeftp0 > 0) {
 
-        pp0 = pp0 + t * (pp1 - pp0);
-        c0 = c0 + t * (c1 - c0);
+    //    float npDota = Vec3dot(npLeft,Vec3f(p0.x, p0.y, p0.z));
+    //    float npDotabdif = Vec3dot(npLeft, (Vec3f(p0.x, p0.y, p0.z) - Vec3f(p1.x, p1.y, p1.z)));
 
-    }
-    float fLeftp2 = ALeft * p2.x + BLeft * p2.y + CLeft * p2.z + DLeft;
+    //    float t = (npDota + DLeft) /npDotabdif;
 
-    if (fLeftp2 > 0) {
+    //    printf("t: %f\n",t);
+    //    //p0 = p0 + t * (p1 - p0);
+    //    //pp0 = VP * p0;
 
-        float npDota = Vec3dot(npLeft,Vec3f(p2.x, p2.y, p2.z));
-        float npDotabdif = Vec3dot(npLeft, (Vec3f(p2.x, p2.y, p2.z) - Vec3f(p1.x, p1.y, p1.z)));
+    //    pp0 = pp0 + t * (pp1 - pp0);
+    //    c0 = c0 + t * (c1 - c0);
 
-        float t = (npDota + DLeft) /npDotabdif;
+    //}
+    //float fLeftp2 = ALeft * p2.x + BLeft * p2.y + CLeft * p2.z + DLeft;
 
-        printf("t: %f\n",t);
-        //p0 = p0 + t * (p1 - p0);
-        //pp0 = VP * p0;
+    //if (fLeftp2 > 0) {
 
-        pp2 = pp2 + t * (pp1 - pp2);
-        c2 = c2 + t * (c1 - c2);
+    //    float npDota = Vec3dot(npLeft,Vec3f(p2.x, p2.y, p2.z));
+    //    float npDotabdif = Vec3dot(npLeft, (Vec3f(p2.x, p2.y, p2.z) - Vec3f(p1.x, p1.y, p1.z)));
 
-    }
+    //    float t = (npDota + DLeft) /npDotabdif;
+
+    //    printf("t: %f\n",t);
+    //    //p0 = p0 + t * (p1 - p0);
+    //    //pp0 = VP * p0;
+
+    //    pp2 = pp2 + t * (pp1 - pp2);
+    //    c2 = c2 + t * (c1 - c2);
+
+    //}
 
 
 

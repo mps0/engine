@@ -3,11 +3,12 @@
 
 #include "vector.hpp"
 #include "pipeline.hpp"
+#include "vertex.hpp"
 
 
 class Asset{
     public:
-        Attributes*   vBuffer;
+        Vertex*   vBuffer;
         int*    iBuffer;
         int num_vertices;
         int num_triangles;
@@ -16,7 +17,7 @@ class Asset{
 
         Asset(int num_vertices, int num_triangles) : num_vertices(num_vertices), num_triangles(num_triangles)  {
 
-            vBuffer = new Attributes[num_vertices];
+            vBuffer = new Vertex[num_vertices];
             iBuffer = new int[num_triangles];
 
         }
@@ -38,7 +39,7 @@ class Triangle : public Asset{
 
        num_vertices = 3;
        num_triangles = 1;
-       vBuffer = new Attributes[num_vertices]; 
+       vBuffer = new Vertex[num_vertices]; 
        iBuffer = new int[num_triangles];
 
        vBuffer[0].pos = Vec4f(p0.x, p0.y, p0.z, 1.f);
@@ -84,7 +85,7 @@ class Box : public Asset {
                 Vec4f p6 = p2 + Vec4f(0.f, 0.f, height, 0.f);
                 Vec4f p7 = p3 + Vec4f(0.f, 0.f, height, 0.f);
 
-                vBuffer = new Attributes[num_vertices];
+                vBuffer = new Vertex[num_vertices];
                 vBuffer[0].pos = p0;
                 vBuffer[0].pos = p0;
                 vBuffer[1].pos = p1;
@@ -185,7 +186,7 @@ class Grid : public Asset {
 
                 Vec4f color = Vec4f(1.f, 1.f, 1.f, 1.f);
 
-                vBuffer = new Attributes[num_vertices];
+                vBuffer = new Vertex[num_vertices];
                 iBuffer = new int[num_triangles * 3];
 
 

@@ -103,16 +103,16 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     else if (p2.y > yMax) yMax = y2;
 
 
-    //simple clipping
-    if (xMin < 0) xMin = 0;
-    else if(xMin > 639) xMin = 639;
-    if (yMin < 0) yMin = 0;
-    else if(yMin > 639) yMin = 639;
+    ////simple clipping
+    //if (xMin < 0) xMin = 0;
+    //else if(xMin > 639) xMin = 639;
+    //if (yMin < 0) yMin = 0;
+    //else if(yMin > 639) yMin = 639;
 
-    if (xMax > 639) xMax = 639;
-    else if(xMax < 0) xMax = 0;
-    if (yMax > 639) yMax = 639;
-    else if(yMax < 0) yMax = 0;
+    //if (xMax > 639) xMax = 639;
+    //else if(xMax < 0) xMax = 0;
+    //if (yMax > 639) yMax = 639;
+    //else if(yMax < 0) yMax = 0;
 
     int A21 = y1 - y2;
     int B21 = x2 - x1; 
@@ -146,11 +146,6 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
             if (alpha >= 0.f) {
                 if (beta >= 0.f) {
                     if (gamma >= 0.f) {
-
-                        //int R = alpha * 255.f; 
-                        //int G = beta * 255.f; 
-                        //int B = gamma * 255.f; 
-
 
                         
                         Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;

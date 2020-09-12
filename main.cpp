@@ -12,6 +12,8 @@
 #include "matrix.hpp"
 #include "assets.hpp"
 #include "camera.hpp"
+#include "vertex.hpp"
+
 
 
 #define SCREEN_WIDTH 640
@@ -34,6 +36,7 @@ int main(void) {
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
+
     Asset* triangle = new Triangle(Vec3f(-2.5f, -0.5f, -1.f), Vec3f(0.f, -0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
     //Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2); //Asset* box = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.5f);
 
@@ -42,7 +45,7 @@ int main(void) {
     //assets.push_back(grid);
     //assets.push_back(box);
 
-    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
+    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 5.f));
 
     bool run = true; 
     while(run) {
@@ -91,7 +94,7 @@ int main(void) {
         }
                                      
 
-                                     Attributes v0, v1, v2;
+                                     Vertex v0, v1, v2;
                                      for(Asset* asset : assets) {
                                          for(int  k = 0; k < asset->num_triangles; k++) {
 
