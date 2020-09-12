@@ -120,6 +120,10 @@ class Vec4 {
             return Vec4(x + v.x, y + v.y, z + v.z, w + v.w);
         }
 
+        Vec4 operator-(Vec4 v) {
+            return Vec4(x - v.x, y - v.y, z - v.z, w - v.w);
+        }
+
 };
 typedef Vec4<int> Vec4i;
 typedef Vec4<float> Vec4f;

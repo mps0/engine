@@ -27,6 +27,41 @@ class Asset{
 };
 
 
+class Triangle : public Asset{
+
+    public:
+    Vec3f p0, p1, p2;
+    Vec4f c0, c1, c2;
+
+
+    Triangle(Vec3f p0, Vec3f p1, Vec3f p2, Vec4f c0, Vec4f c1, Vec4f c2) : p0(p0), p1(p1), p2(p2), c0(c0), c1(c1), c2(c2){
+
+       num_vertices = 3;
+       num_triangles = 1;
+       vBuffer = new Attributes[num_vertices]; 
+       iBuffer = new int[num_triangles];
+
+       vBuffer[0].pos = Vec4f(p0.x, p0.y, p0.z, 1.f);
+       vBuffer[1].pos = Vec4f(p1.x, p1.y, p1.z, 1.f);
+       vBuffer[2].pos = Vec4f(p2.x, p2.y, p2.z, 1.f);
+
+       vBuffer[0].color = c0;
+       vBuffer[1].color = c1;
+       vBuffer[2].color = c2;
+
+       iBuffer[0] = 0;
+       iBuffer[1] = 1;
+       iBuffer[2] = 2;
+
+
+
+    }
+
+
+
+};
+
+
 class Box : public Asset {
     public:    
 

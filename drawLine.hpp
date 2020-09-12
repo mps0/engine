@@ -182,7 +182,7 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
 
 void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image* image) {
 
-    cohenSutherlandClip(p0, p1);
+  //  cohenSutherlandClip(p0, p1);
 
 
     bool switchOrder = p0.x > p1.x;

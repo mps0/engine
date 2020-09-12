@@ -9,9 +9,6 @@
 #include "drawTriangle.hpp"
 #include "drawLine.hpp"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
-
 
 struct Attributes {
     Vec4f pos;
@@ -25,7 +22,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
     Vec4f p2 = v2.pos;
 
 
-    //transform from world-space to cam->ra space
+    //transform from world-space to camera space
     //first match rotation
     Mat4f rot = Mat4f();
     rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
@@ -37,7 +34,6 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
     trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
     trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
     trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-    //trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
     trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
     //combine
     Mat4f view = rot * trans;
@@ -90,19 +86,76 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
 
     Mat4f VP = persp * view;
 
+
     //printf("p0.x: %f, p0.y: %f, p0.z %f, p0.w %f\n",p0.x, p0.y, p0.z, p0.w);
     //printf("p1.x: %f, p1.y: %f, p1.z %f, p1.w %f\n",p1.x, p1.y, p1.z, p1.w);
     //printf("p2.x: %f, p2.y: %f, p2.z %f, p2.w %f\n",p2.x, p2.y, p2.z, p2.w);
-    
-
-    Vec4f pp0 = VP * p0;
-    Vec4f pp1 = VP * p1;
-    Vec4f pp2 = VP * p2;
-
+    //
     //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
     //printf("pp1.x: %f, pp1.y: %f, pp1.z %f, pp1.w %f\n",pp1.x, pp1.y, pp1.z, pp1.w);
     //printf("pp2.x: %f, pp2.y: %f, pp2.z %f, pp2.w %f\n",pp2.x, pp2.y, pp2.z, pp2.w);
 
+    //printf("np.x: %f, np.y: %f, np.z: %f)\n",np.x, np.y, np.z);
+    
+
+    //clip space
+    Vec4f pp0 = VP * p0;
+    Vec4f pp1 = VP * p1;
+    Vec4f pp2 = VP * p2;
+
+    //left plane
+    float ALeft = VP.c0.x + VP.c0.w;
+    float BLeft = VP.c1.x + VP.c1.w;
+    float CLeft = VP.c2.x + VP.c2.w;
+    float DLeft = VP.c3.x + VP.c3.w;
+
+
+    Vec3f npLeft = Vec3f(ALeft, BLeft, CLeft);
+    
+    printf("A: %f, B: %f, C: %f, D: %f\n", ALeft, BLeft, CLeft, DLeft);
+
+
+    printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
+    float fLeftp0 = ALeft * p0.x + BLeft * p0.y + CLeft * p0.z + DLeft;
+    printf("fLeftp0: %f\n",fLeftp0);
+
+
+    if (fLeftp0 > 0) {
+
+        float npDota = Vec3dot(npLeft,Vec3f(p0.x, p0.y, p0.z));
+        float npDotabdif = Vec3dot(npLeft, (Vec3f(p0.x, p0.y, p0.z) - Vec3f(p1.x, p1.y, p1.z)));
+
+        float t = (npDota + DLeft) /npDotabdif;
+
+        printf("t: %f\n",t);
+        //p0 = p0 + t * (p1 - p0);
+        //pp0 = VP * p0;
+
+        pp0 = pp0 + t * (pp1 - pp0);
+
+    }
+    float fLeftp2 = ALeft * p2.x + BLeft * p2.y + CLeft * p2.z + DLeft;
+
+    if (fLeftp2 > 0) {
+
+        float npDota = Vec3dot(npLeft,Vec3f(p2.x, p2.y, p2.z));
+        float npDotabdif = Vec3dot(npLeft, (Vec3f(p2.x, p2.y, p2.z) - Vec3f(p1.x, p1.y, p1.z)));
+
+        float t = (npDota + DLeft) /npDotabdif;
+
+        printf("t: %f\n",t);
+        //p0 = p0 + t * (p1 - p0);
+        //pp0 = VP * p0;
+
+        pp2 = pp2 + t * (pp1 - pp2);
+
+    }
+
+
+
+
+
+    //NDC space
     pp0 = (1.f / pp0.w) * pp0;
     pp1 = (1.f / pp1.w) * pp1;
     pp2 = (1.f / pp2.w) * pp2;
@@ -112,7 +165,7 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
     //printf("pp2.x: %f, pp2.y: %f, pp2.z %f, pp2.w %f\n",pp2.x, pp2.y, pp2.z, pp2.w);
 
 
-    //viewport transformation -- now Z values care carried along in Z again.
+    //viewport transformation -- now Z values are carried along in Z component again.
     /*
      * |W/2    0      0    (W-1)/2|
      * |0      -H/2    0    (H-1)/2|
@@ -147,11 +200,11 @@ void pipeline(Image* image, Attributes v0, Attributes v1, Attributes v2, Camera*
 
     
 
-    drawLine(pi0, pi1, v0.color, v1.color, z0, z1, image);
-    drawLine(pi1, pi2, v1.color, v2.color, z1, z2, image);
-    drawLine(pi2, pi0, v2.color, v0.color, z2, z0, image);
+    //drawLine(pi0, pi1, v0.color, v1.color, z0, z1, image);
+    //drawLine(pi1, pi2, v1.color, v2.color, z1, z2, image);
+    //drawLine(pi2, pi0, v2.color, v0.color, z2, z0, image);
 
-    //drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
+    drawTriangle(pi0, pi1, pi2, v0.color, v1.color, v2.color, z0, z1, z2, image);
 
 
 

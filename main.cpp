@@ -33,10 +33,13 @@ int main(void) {
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2); //Asset* box = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.5f);
+
+    Asset* triangle = new Triangle(Vec3f(-2.5f, -0.5f, -1.f), Vec3f(0.f, -0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    //Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2); //Asset* box = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.5f);
 
     std::vector<Asset*> assets;
-    assets.push_back(grid);
+    assets.push_back(triangle);
+    //assets.push_back(grid);
     //assets.push_back(box);
 
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));

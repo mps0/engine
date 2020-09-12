@@ -141,6 +141,8 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
             float beta = f20xy / f20x1y1;
             float gamma = f01xy / f01x2y2;
 
+
+            //TODO: TRIANGLE PIXEL EDGES
             if (alpha >= 0.f) {
                 if (beta >= 0.f) {
                     if (gamma >= 0.f) {
