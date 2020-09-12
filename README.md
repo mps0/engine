@@ -2,21 +2,19 @@ A software rasterizer I am writing from scratch (window/input management through
 
 Working on 3D frustum clipping:
 
-![](vids/3D_frustum_clipping.gif)
+<img src="vids/3D_frustum_clipping.gif" width="300">
 
 Camera controls:
 
-![](vids/wireframe_grid_cube.gif)
+<img src="vids/wireframe_grid_cube.gif" width="300">
 
-Asset support (vertix/index buffers w/ concatenation)
+Asset support (vertex + index buffers w/ concatenation between assets)
 
-![](vids/box_barycentric_grid.png)
+<img src="vids/box_barycentric_grid.png" width="300">
 
+Basic line drawing and projection:
 
-Basic line drawing and MVP transform
-![](vids/spinning_triangle.gif)
-
-
+<img src="vids/spinning_triangle.gif" width="300">
 
 
 
