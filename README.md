@@ -2,7 +2,7 @@ A software rasterizer I am writing from scratch (window/input management through
 
 Working on 3D frustum clipping:
 
-<img src="vids/3D_frustum_clipping.gif" width="300">
+<img src="vids/frustum_clipping.gif" width="300">
 
 Camera controls:
 
