@@ -23,7 +23,7 @@ image.o: image.hpp
 camera.o: camera.hpp vector.hpp
 	$(CCXX) $(CFLAGS) -c camera.hpp -o camera.o
 
-pipeline.o: pipeline.hpp camera.hpp vertex.hpp
+pipeline.o: pipeline.hpp camera.hpp vertex.hpp plane.hpp
 	$(CCXX) $(CFLAGS) -c pipeline.hpp -o pipeline.o
 
 matrix.o: matrix.hpp vector.hpp

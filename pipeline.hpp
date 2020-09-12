@@ -112,76 +112,128 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
     Plane LEFT = Plane(ALeft, BLeft, CLeft, DLeft);
 
-    
-    Vertex vpp0, vpp1, vpp2;
-
-    vpp0.pos = pp0;
-    vpp0.color = v0.color;
-
-    vpp1.pos = pp1;
-    vpp1.color = v1.color;
-
-    vpp2.pos = pp2;
-    vpp2.color = v2.color;
-
-    Vertex* newTris = LEFT.triangleIntersection(v0, v1, v2, vpp0, vpp1, vpp2);
-
-    pp0 = newTris[0].pos;
-    c0 = newTris[0].color;
-
-    pp1 = newTris[1].pos;
-    c1 = newTris[1].color;
-
-    pp2 = newTris[2].pos;
-    c2 = newTris[2].color;
-
-    //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
 
 
-    //Vec3f npLeft = Vec3f(ALeft, BLeft, CLeft);
+
+    Vertex vs [3];
+
+    vs[0] = v0;
+    vs[1] = v1;
+    vs[2] = v2;
+
+    Vertex vps[3];
+
+    vps[0].pos = pp0;
+    vps[0].color = c0;
+    vps[1].pos = pp1;
+    vps[1].color = c1;
+    vps[2].pos = pp2;
+    vps[2].color = c2;
+
+
+
+
+    //for each plane
+    //for each of the 3 line segments
     //
-    //printf("A: %f, B: %f, C: %f, D: %f\n", ALeft, BLeft, CLeft, DLeft);
+
+
+    std::vector<Vertex> out;
+    std::vector<Vertex> in;
+    std::vector<Vertex> ret;
+
+    for(int i = 0; i < 3; i++) { 
+        float f =  LEFT.evaluatePlane(vs[i].pos);
+
+        printf("f: %f\n", f);
+        if (f > 0) {
+
+            out.push_back(vs[i]);
+        }
+
+        else {
+        printf("i: %i\n",i);
+
+            in.push_back(vs[i]);
+        }
+    } 
+
+    for (int i = 0; i < out.size(); i++) {
+        for (int j = 0; j < in.size(); j++) {
+
+
+        float t = LEFT.lineSegmentIntersection(out[i].pos, in[j].pos);
+        out[i].pos = out[i].pos + t * (in[j].pos - out[i].pos);
+        out[i].color = out[i].color + t * (in[j].color - out[i].color);
+
+        vps[i] = out[i];
+    }
+    }
+
+    for (int i = out.size(); i < (in.size() + out.size()); i++){
+
+        printf("i: %i\n",i);
+                
+
+       vps[i] = in[i];
+    }
+
+    printf("out.size(): %i, in.size(): %i\n", out.size(), in.size());
+
+
+   pp0 = vps[0].pos;
+   c0 = vps[0].color;
+   pp1 = vps[1].pos;
+   c1 = vps[1].color;
+   pp2 = vps[2].pos;
+   c2 = vps[2].color;
+    
 
 
 
-    //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
-    //float fLeftp0 = ALeft * p0.x + BLeft * p0.y + CLeft * p0.z + DLeft;
-    //printf("fLeftp0: %f\n",fLeftp0);
 
 
-    //if (fLeftp0 > 0) {
+//   float t01 = LEFT.lineSegmentIntersection(p0, p1);
+//   float t02 = LEFT.lineSegmentIntersection(p0, p2);
+//   //float t12 = LEFT.lineSegmentIntersection(p1, p2);
+//   float t21 = LEFT.lineSegmentIntersection(p2, p1);
+//
+//   if(t01 > 0) {
+//       pp0 = pp0 + t01 * (pp1 - pp0);
+//       c0 = c0 + t01 * (c1 - c0);
+//   }
+//
+//   //if(t02 > 0) {
+//   //    pp0 = pp0 + t02 * (pp2 - pp0);
+//   //    c0 = c0 + t02 * (c2 - c0);
+//   //}
+//
+//   //if(t12 > 0) {
+//   //    pp1 = pp1 + t12 * (pp2 - pp1);
+//   //    c1 = c1 + t12 * (c2 - c1);
+//   //}
+//
+//   if(t21 > 0) {
+//        pp2 = pp2 + t21 * (pp1 - pp2);
+//        c2 = c2 + t21 * (c1 - c2);
+//   }
+//
+   //next = (next + 1) % 3;
+        
+   //float t01 = LEFT.lineSegmentIntersection(p0, p1);
 
-    //    float npDota = Vec3dot(npLeft,Vec3f(p0.x, p0.y, p0.z));
-    //    float npDotabdif = Vec3dot(npLeft, (Vec3f(p0.x, p0.y, p0.z) - Vec3f(p1.x, p1.y, p1.z)));
+   //if(t01 > 0) {
+   //     pp0 = pp0 + t01 * (pp1 - pp0);
+   //     c0 = c0 + t01 * (c1 - c0);
+   //}
 
-    //    float t = (npDota + DLeft) /npDotabdif;
+   //float t21 = LEFT.lineSegmentIntersection(p2, p1);
 
-    //    printf("t: %f\n",t);
-    //    //p0 = p0 + t * (p1 - p0);
-    //    //pp0 = VP * p0;
-
-    //    pp0 = pp0 + t * (pp1 - pp0);
-    //    c0 = c0 + t * (c1 - c0);
-
-    //}
-    //float fLeftp2 = ALeft * p2.x + BLeft * p2.y + CLeft * p2.z + DLeft;
-
-    //if (fLeftp2 > 0) {
-
-    //    float npDota = Vec3dot(npLeft,Vec3f(p2.x, p2.y, p2.z));
-    //    float npDotabdif = Vec3dot(npLeft, (Vec3f(p2.x, p2.y, p2.z) - Vec3f(p1.x, p1.y, p1.z)));
-
-    //    float t = (npDota + DLeft) /npDotabdif;
-
-    //    printf("t: %f\n",t);
-    //    //p0 = p0 + t * (p1 - p0);
-    //    //pp0 = VP * p0;
-
-    //    pp2 = pp2 + t * (pp1 - pp2);
-    //    c2 = c2 + t * (c1 - c2);
-
-    //}
-
+   //if(t21 > 0) {
+   //     pp2 = pp2 + t21 * (pp1 - pp2);
+   //     c2 = c2 + t21 * (c1 - c2);
+   //}
+   //}
 
 
 

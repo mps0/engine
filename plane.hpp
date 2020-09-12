@@ -1,7 +1,6 @@
 #ifndef PLANE_HPP
 #define PLANE_HPP
 
-#include "pipeline.hpp"
 #include "vector.hpp"
 #include "vertex.hpp"
 
@@ -80,80 +79,48 @@ public:
 
 
 
-
-    Vertex* triangleIntersection(Vertex v0, Vertex v1, Vertex v2, Vertex vp0, Vertex vp1, Vertex vp2) {
-
-    static Vertex rVal [3];
-    Vertex verts [3] = {v0, v1, v2};
-    Vertex vertsP [3] = {vp0, vp1, vp2};
+    float evaluatePlane(Vec4f p) {
 
 
-        Vec3f n = Vec3f(A, B, C);
-
-    int next = 1;
-    for(int i = 0; i < 3; i++) {
-
-
-    Vec4f a = verts[i].pos;
-
-    Vec4f  b = verts[next].pos;
-
-
-    //printf("i: %i, next: %i\n", i, next);
-
-    float f = A * a.x + B * a.y + C * a.z + D ;
-
-    if ((f > 0) && (i != 1)) {
-
-        float npdota = Vec3dot(n,Vec3f(a.x, a.y, a.z));
-        float npdotabdif = Vec3dot(n, (Vec3f(a.x, a.y, a.z) - Vec3f(b.x, b.y, b.z)));
-
-        float t = (npdota + D) /npdotabdif;
-
-        rVal[i].pos = vertsP[i].pos + t * (vertsP[next].pos - vertsP[i].pos);
-        rVal[i].color = vertsP[i].color + t * (vertsP[next].color - vertsP[i].color);
-        //pp0 = pp0 + t * (pp1 - pp0);
-        //c0 = c0 + t * (c1 - c0);
-
-    }
-    
-
-    else {
-
-        rVal[i] = vertsP[i];
-
-    }
-
-    //next = (next + 1) % 3;
-    }
-
-
-       
-    return rVal;
+   // return A * p.x + B * p.y + C * p.z + D * p.w????
+    return A * p.x + B * p.y + C * p.z + D;
 
     }
 
 
-    //segmentIntersection(Vec3f p0, Vec3f p1) {
 
+    float lineSegmentIntersection(Vec4f p0, Vec4f p1) {
+    //float t = -1.f;
 
+    //Vec3f a = Vec3f(p0.x, p0.y, p0.z);
+    //Vec3f b = Vec3f(p1.x, p1.y, p1.z);
 
+    //float f = A * a.x + B * a.y + C * a.z + D;
 
+    //Vec3f n = Vec3f(A, B, C);
 
+    //if (f > 0) {
+
+    //float npdota = Vec3dot(n,Vec3f(a.x, a.y, a.z));
+    //float npdotabdif = Vec3dot(n, (Vec3f(a.x, a.y, a.z) - Vec3f(b.x, b.y, b.z)));
+
+    //t = (npdota + D) /npdotabdif;
     //}
-    
+    //
+    //return t;
 
 
+    Vec3f a = Vec3f(p0.x, p0.y, p0.z);
+    Vec3f b = Vec3f(p1.x, p1.y, p1.z);
+    Vec3f n = Vec3f(A, B, C);
 
 
+    float npdota = Vec3dot(n,Vec3f(a.x, a.y, a.z));
+    float npdotabdif = Vec3dot(n, (Vec3f(a.x, a.y, a.z) - Vec3f(b.x, b.y, b.z)));
 
+    return  (npdota + D) /npdotabdif;
 
-
-
-
-
-
-
+    }
 
 
 
