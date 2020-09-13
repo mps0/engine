@@ -182,12 +182,41 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
 //void drawQuad(Vec2i p0, Vec2i p1, Vec2i p2, Vec2i p3, Vec4f c0, Vec4f c1, Vec4f c2, Vec4f c3, float z0, float z1, float z2, float z3, Image* image) {
 void drawQuad(Vec2i* p, Vec4f* c, float* z, Image* image) {
 
+//Vec2i a, b, c, d;
+//
+//a = p[0];
+//b = p[1];
+//c = p[2];
+//d = p[3];
+
+    drawTriangle(p[0], p[1], p[2], c[0], c[1], c[2], z[0], z[1], z[2], image);
 
 
+int lab = (p[1] - p[0]).lengthSq();
+int lac = (p[2] - p[0]).lengthSq();
+int lcb = (p[2] - p[1]).lengthSq();
+
+if((lab > lac) && (lab > lcb)) {
 
     drawTriangle(p[0], p[1], p[3], c[0], c[1], c[3], z[0], z[1], z[3], image);
 
-    drawTriangle(p[3], p[2], p[0], c[3], c[2], c[0], z[3], z[2], z[0], image);
+  }
+
+if((lac > lab) && (lac > lcb)) {
+
+    drawTriangle(p[0], p[2], p[3], c[0], c[2], c[3], z[0], z[2], z[3], image);
+
+  }
+
+if((lcb > lac) && (lcb > lab)) {
+  //else {
+
+    drawTriangle(p[2], p[1], p[3], c[2], c[1], c[3], z[2], z[1], z[3], image);
+
+  }
+
+
+
 
        
 
