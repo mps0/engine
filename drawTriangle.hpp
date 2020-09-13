@@ -1,6 +1,8 @@
 #ifndef DRAWTRIANGLE_HPP
 #define DRAWTRIANGLE_HPP
 
+#include <algorithm>
+
 #include "image.hpp"
 #include "vector.hpp"
 
@@ -177,25 +179,20 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     }
 }
 
+//void drawQuad(Vec2i p0, Vec2i p1, Vec2i p2, Vec2i p3, Vec4f c0, Vec4f c1, Vec4f c2, Vec4f c3, float z0, float z1, float z2, float z3, Image* image) {
+void drawQuad(Vec2i* p, Vec4f* c, float* z, Image* image) {
 
 
 
 
+    drawTriangle(p[0], p[1], p[3], c[0], c[1], c[3], z[0], z[1], z[3], image);
+
+    drawTriangle(p[3], p[2], p[0], c[3], c[2], c[0], z[3], z[2], z[0], image);
+
+       
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 

@@ -8,7 +8,7 @@
 
 
 
-/* General Form: Ax + By + Cd + D = 0
+/* General Form: Ax + By + Cz + D = 0
  *
  * Implicit Plane: f(p) = dot(n, p - a) = 0
  *
@@ -60,6 +60,10 @@
  * So The plane is,
  * A * X + B * Y + C * Z + D * W = 0
  *
+ * and since W = 1 always,
+ *
+ * A * X + B * Y + C * Z + D = 0
+ *
  * Where,
  * 
  * A = (m00 + m30)
@@ -82,7 +86,6 @@ public:
     float evaluatePlane(Vec4f p) {
 
 
-   // return A * p.x + B * p.y + C * p.z + D * p.w????
     return A * p.x + B * p.y + C * p.z + D;
 
     }
@@ -90,33 +93,14 @@ public:
 
 
     float lineSegmentIntersection(Vec4f p0, Vec4f p1) {
-    //float t = -1.f;
-
-    //Vec3f a = Vec3f(p0.x, p0.y, p0.z);
-    //Vec3f b = Vec3f(p1.x, p1.y, p1.z);
-
-    //float f = A * a.x + B * a.y + C * a.z + D;
-
-    //Vec3f n = Vec3f(A, B, C);
-
-    //if (f > 0) {
-
-    //float npdota = Vec3dot(n,Vec3f(a.x, a.y, a.z));
-    //float npdotabdif = Vec3dot(n, (Vec3f(a.x, a.y, a.z) - Vec3f(b.x, b.y, b.z)));
-
-    //t = (npdota + D) /npdotabdif;
-    //}
-    //
-    //return t;
-
 
     Vec3f a = Vec3f(p0.x, p0.y, p0.z);
     Vec3f b = Vec3f(p1.x, p1.y, p1.z);
     Vec3f n = Vec3f(A, B, C);
 
 
-    float npdota = Vec3dot(n,Vec3f(a.x, a.y, a.z));
-    float npdotabdif = Vec3dot(n, (Vec3f(a.x, a.y, a.z) - Vec3f(b.x, b.y, b.z)));
+    float npdota = Vec3dot(n,a);
+    float npdotabdif = Vec3dot(n, a - b);
 
     return  (npdota + D) /npdotabdif;
 

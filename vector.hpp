@@ -34,6 +34,10 @@ template<class T> class Vec2 {
             return Vec2(x - v.x, y - v.y);
         }
 
+        T lengthSq() {
+            return x * x + y * y;
+        }
+
 };
 typedef Vec2<int> Vec2i;
 typedef Vec2<float> Vec2f;

@@ -134,13 +134,14 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
 
     //for each plane
-    //for each of the 3 line segments
-    //
-
 
     std::vector<Vertex> out;
     std::vector<Vertex> in;
-    std::vector<Vertex> ret;
+
+    std::vector<Vertex> outP;
+    std::vector<Vertex> inP;
+
+    std::vector<Vertex> result;
 
     for(int i = 0; i < 3; i++) { 
         float f =  LEFT.evaluatePlane(vs[i].pos);
@@ -149,99 +150,138 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
         if (f > 0) {
 
             out.push_back(vs[i]);
+            outP.push_back(vps[i]);
         }
 
         else {
         printf("i: %i\n",i);
 
             in.push_back(vs[i]);
+            inP.push_back(vps[i]);
         }
     } 
-
-    for (int i = 0; i < out.size(); i++) {
-        for (int j = 0; j < in.size(); j++) {
-
-
-        float t = LEFT.lineSegmentIntersection(out[i].pos, in[j].pos);
-        out[i].pos = out[i].pos + t * (in[j].pos - out[i].pos);
-        out[i].color = out[i].color + t * (in[j].color - out[i].color);
-
-        vps[i] = out[i];
-    }
-    }
-
-    for (int i = out.size(); i < (in.size() + out.size()); i++){
-
-        printf("i: %i\n",i);
-                
-
-       vps[i] = in[i];
-    }
-
     printf("out.size(): %i, in.size(): %i\n", out.size(), in.size());
 
 
-   pp0 = vps[0].pos;
-   c0 = vps[0].color;
-   pp1 = vps[1].pos;
-   c1 = vps[1].color;
-   pp2 = vps[2].pos;
-   c2 = vps[2].color;
+
+    if (out.size() == 3){
+
+        //do nothing
+    }
+
+    else if(out.size() == 0) {
+
+    result = inP; 
+
+    }
+
+
+    else if (out.size() == 2) {
+
+        for (int i = 0; i < out.size(); i++) {
+            for (int j = 0; j < in.size(); j++) {
+
+
+                float t = LEFT.lineSegmentIntersection(out[i].pos, in[j].pos);
+                Vertex vpn;
+                vpn.pos = outP[i].pos + t * (inP[j].pos - outP[i].pos);
+                vpn.color = outP[i].color + t * (inP[j].color - outP[i].color);
+                result.push_back(vpn);
+            }
+        }
+
+        for (int i = out.size(); i < (in.size() + out.size()); i++){
+            //printf("i: %i\n",i);
+
+            Vertex vpn;
+            vpn = inP[i - out.size()];
+            result.push_back(vpn);
+        }
+    }
+
+    else if (out.size() == 1) {
+
+        //for (int j = 0; j < in.size(); j++) {
+        //    float t = LEFT.lineSegmentIntersection(out[0].pos, in[j].pos);
+        //    Vertex vpn;
+        //    vpn.pos = outP[0].pos + t * (inP[j].pos - outP[0].pos);
+        //    vpn.color = outP[0].color + t * (inP[j].color - outP[0].color);
+        //    result.push_back(vpn);
+        //    result.push_back(inP[j]);
+        //}
+        
+        float t0 = LEFT.lineSegmentIntersection(out[0].pos, in[0].pos);
+        float t1 = LEFT.lineSegmentIntersection(out[0].pos, in[1].pos);
+        Vertex vpn0, vpn1;
+        vpn0.pos = outP[0].pos + t0 * (inP[0].pos - outP[0].pos);
+        vpn0.color = outP[0].color + t0 * (inP[0].color - outP[0].color);
+        vpn1.pos = outP[0].pos + t1 * (inP[1].pos - outP[0].pos);
+        vpn1.color = outP[0].color + t1 * (inP[1].color - outP[0].color);
+
+        if (vpn1.pos.y > vpn0.pos.y) { 
+        
+            result.push_back(vpn1);
+            result.push_back(vpn0);
+
+
+        } 
+        else {
+
+
+            result.push_back(vpn0);
+            result.push_back(vpn1);
+        }
+
+        if (inP[1].pos.y > inP[0].pos.y) { 
+        
+            result.push_back(inP[1]);
+            result.push_back(inP[0]);
+
+
+        } 
+        else {
+            result.push_back(inP[0]);
+            result.push_back(inP[1]);
+
+
+        }
+
+
+        //result.push_back(vpn);
+        //result.push_back(inP[j]);
+
+
+    }
+
+
+
+   int num_verts = result.size();
+
+   //pp0 = vps[0].pos;
+   //c0 = vps[0].color;
+   //pp1 = vps[1].pos;
+   //c1 = vps[1].color;
+   //pp2 = vps[2].pos;
+   //c2 = vps[2].color;
+
+    
+   Vertex pp [num_verts];
+
+   for(int i = 0; i < num_verts; i++) {
+
+    pp[i] = result[i]; 
+    pp[i].pos = (1.f / pp[i].pos.w) * pp[i].pos;
+
+   }
+   
     
 
 
 
-
-
-//   float t01 = LEFT.lineSegmentIntersection(p0, p1);
-//   float t02 = LEFT.lineSegmentIntersection(p0, p2);
-//   //float t12 = LEFT.lineSegmentIntersection(p1, p2);
-//   float t21 = LEFT.lineSegmentIntersection(p2, p1);
-//
-//   if(t01 > 0) {
-//       pp0 = pp0 + t01 * (pp1 - pp0);
-//       c0 = c0 + t01 * (c1 - c0);
-//   }
-//
-//   //if(t02 > 0) {
-//   //    pp0 = pp0 + t02 * (pp2 - pp0);
-//   //    c0 = c0 + t02 * (c2 - c0);
-//   //}
-//
-//   //if(t12 > 0) {
-//   //    pp1 = pp1 + t12 * (pp2 - pp1);
-//   //    c1 = c1 + t12 * (c2 - c1);
-//   //}
-//
-//   if(t21 > 0) {
-//        pp2 = pp2 + t21 * (pp1 - pp2);
-//        c2 = c2 + t21 * (c1 - c2);
-//   }
-//
-   //next = (next + 1) % 3;
-        
-   //float t01 = LEFT.lineSegmentIntersection(p0, p1);
-
-   //if(t01 > 0) {
-   //     pp0 = pp0 + t01 * (pp1 - pp0);
-   //     c0 = c0 + t01 * (c1 - c0);
-   //}
-
-   //float t21 = LEFT.lineSegmentIntersection(p2, p1);
-
-   //if(t21 > 0) {
-   //     pp2 = pp2 + t21 * (pp1 - pp2);
-   //     c2 = c2 + t21 * (c1 - c2);
-   //}
-   //}
-
-
-
-
-    //NDC space
-    pp0 = (1.f / pp0.w) * pp0;
-    pp1 = (1.f / pp1.w) * pp1;
-    pp2 = (1.f / pp2.w) * pp2;
+    ///NDC space
+    ///pp0 = (1.f / pp0.w) * pp0;
+    ///pp1 = (1.f / pp1.w) * pp1;
+    ///pp2 = (1.f / pp2.w) * pp2;
 
     //printf("pp0.x: %f, pp0.y: %f, pp0.z %f, pp0.w %f\n",pp0.x, pp0.y, pp0.z, pp0.w);
     //printf("pp1.x: %f, pp1.y: %f, pp1.z %f, pp1.w %f\n",pp1.x, pp1.y, pp1.z, pp1.w);
@@ -263,23 +303,42 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     viewPort.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
     viewPort.c3 = Vec4f((SCREEN_WIDTH - 1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 0.f, 1.f);
 
+   for(int i = 0; i < num_verts; i++) {
 
-    Vec4f ppvp0 = viewPort * pp0;
-    Vec4f ppvp1 = viewPort * pp1;
-    Vec4f ppvp2 = viewPort * pp2;
+    pp[i].pos = viewPort * pp[i].pos; 
+
+   }
+
+   Vec2i pi [num_verts];
+   Vec4f c [num_verts];
+   float zBuff [num_verts];
+
+   for(int i = 0; i < num_verts; i++) {
+
+    pi[i] = Vec2i((int)pp[i].pos.x, (int)pp[i].pos.y);
+    zBuff[i] = pp[i].pos.z;
+
+    c[i] = pp[i].color;
+
+   }
+
+
+    //Vec4f ppvp0 = viewPort * pp0;
+    //Vec4f ppvp1 = viewPort * pp1;
+    //Vec4f ppvp2 = viewPort * pp2;
 
     //printf("ppvp0.x: %f, ppvp0.y: %f, ppvp0.z %f, ppvp0.w %f\n",ppvp0.x, ppvp0.y, ppvp0.z, ppvp0.w);
     //printf("ppvp1.x: %f, ppvp1.y: %f, ppvp1.z %f, ppvp1.w %f\n",ppvp1.x, ppvp1.y, ppvp1.z, ppvp1.w);
     //printf("ppvp2.x: %f, ppvp2.y: %f, ppvp2.z %f, ppvp2.w %f\n",ppvp2.x, ppvp2.y, ppvp2.z, ppvp2.w);
 
-    Vec2i pi0 = Vec2i((int)ppvp0.x, (int)ppvp0.y);
-    Vec2i pi1 = Vec2i((int)ppvp1.x, (int)ppvp1.y);
-    Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
+    //Vec2i pi0 = Vec2i((int)ppvp0.x, (int)ppvp0.y);
+    //Vec2i pi1 = Vec2i((int)ppvp1.x, (int)ppvp1.y);
+    //Vec2i pi2 = Vec2i((int)ppvp2.x, (int)ppvp2.y);
 
-    //save depths for depth buffer
-    float z0 = ppvp0.z;
-    float z1 = ppvp1.z;
-    float z2 = ppvp2.z;
+    ////save depths for depth buffer
+    //float z0 = ppvp0.z;
+    //float z1 = ppvp1.z;
+    //float z2 = ppvp2.z;
 
     
 
@@ -287,7 +346,21 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     //drawLine(pi1, pi2, c1, c2, z1, z2, image);
     //drawLine(pi2, pi0, c2, c0, z2, z0, image);
 
-    drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
+
+    //drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
+    //
+    if(num_verts == 3) {
+    drawTriangle(pi[0], pi[1], pi[2], c[0], c[1], c[2], zBuff[0], zBuff[1], zBuff[2], image);
+
+    } else if (num_verts == 4) {
+
+        printf("hi\n");
+
+ //   drawQuad(pi[0], pi[1], pi[2], pi[3], c[0], c[1], c[2], c[3], zBuff[0], zBuff[1], zBuff[2], zBuff[3], image);
+    drawQuad(pi, c, zBuff, image);
+
+
+    }
 
 
 
