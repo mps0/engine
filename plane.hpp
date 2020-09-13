@@ -102,7 +102,9 @@ public:
     float npdota = Vec3dot(n,a);
     float npdotabdif = Vec3dot(n, a - b);
 
-    return  (npdota + D) /npdotabdif;
+
+    if (npdotabdif == 0.f) return -1.f;
+    else return  (npdota + D) /npdotabdif;
 
     }
 

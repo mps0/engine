@@ -10,6 +10,7 @@
 #include "drawLine.hpp"
 #include "plane.hpp"
 #include "vertex.hpp"
+#include "clip.hpp"
 
 
 void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
@@ -104,22 +105,31 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Vec4f pp1 = VP * p1;
     Vec4f pp2 = VP * p2;
 
+    //Plane planes[2];
     //left plane
     float ALeft = VP.c0.x + VP.c0.w;
     float BLeft = VP.c1.x + VP.c1.w;
     float CLeft = VP.c2.x + VP.c2.w;
     float DLeft = VP.c3.x + VP.c3.w;
-
     Plane LEFT = Plane(ALeft, BLeft, CLeft, DLeft);
 
+    //right plane
+    float ARight = VP.c0.x + VP.c0.w;
+    float BRight = VP.c1.x + VP.c1.w;
+    float CRight = VP.c2.x + VP.c2.w;
+    float DRight = VP.c3.x + VP.c3.w;
+    Plane RIGHT = Plane(ARight, BRight, CRight, DRight);
 
 
+    //planes[0] = LEFT;
+    //planes[1] = RIGHT;
 
-    Vertex vs [3];
 
-    vs[0] = v0;
-    vs[1] = v1;
-    vs[2] = v2;
+    //Vertex vs [3];
+
+    //vs[0] = v0;
+    //vs[1] = v1;
+    //vs[2] = v2;
 
     Vertex vps[3];
 
@@ -132,130 +142,129 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
 
 
+    Vertex vp0 = vps[0];
+    Vertex vp1 = vps[1];
+    Vertex vp2 = vps[2];
+    
+
+
+    std::vector<Vertex> result;
+    bool change00 = false;
+    bool change01 = false;
+    bool change10 = false;
+    bool change11 = false;
+    bool change20 = false;
+    bool change21 = false;
+    std::vector<Vertex> result0 = cohenSutherlandClip3D(p0, p1, vps[0], vps[1], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change00, change01);
+    if (change00) result.push_back(result0[0]);
+    if (change01) result.push_back(result0[1]);
+    std::vector<Vertex> result1 = cohenSutherlandClip3D(p1, p2, vps[1], vps[2], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change10, change11);
+    if (change10) result.push_back(result1[0]);
+    if (change11) result.push_back(result1[1]);
+    std::vector<Vertex> result2 = cohenSutherlandClip3D(p2, p0, vps[2], vps[0], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change20, change21);
+    if (change20) result.push_back(result2[0]);
+    if (change21) result.push_back(result2[1]);
+
+    if (!(change00 | change21)) result.push_back(vps[0]);
+    if (!(change01 | change10)) result.push_back(vps[1]);
+    if (!(change11 | change20)) result.push_back(vps[2]);
+
+
 
     //for each plane
 
-    std::vector<Vertex> out;
-    std::vector<Vertex> in;
 
-    std::vector<Vertex> outP;
-    std::vector<Vertex> inP;
+   // std::vector<int> out;
+   // std::vector<int> in;
+   // std::vector<Vertex> result;
 
-    std::vector<Vertex> result;
+   // for(int i = 0; i < 3; i++) { 
+   //     float f =  LEFT.evaluatePlane(vs[i].pos);
 
-    for(int i = 0; i < 3; i++) { 
-        float f =  LEFT.evaluatePlane(vs[i].pos);
+   //     if (f > 0) {
+   //         out.push_back(i);
+   //     }
 
-        printf("f: %f\n", f);
-        if (f > 0) {
-
-            out.push_back(vs[i]);
-            outP.push_back(vps[i]);
-        }
-
-        else {
-        printf("i: %i\n",i);
-
-            in.push_back(vs[i]);
-            inP.push_back(vps[i]);
-        }
-    } 
-    printf("out.size(): %i, in.size(): %i\n", out.size(), in.size());
+   //     else {
+   //         in.push_back(i);
+   //     }
+   // } 
 
 
+   // if (out.size() == 3){
 
-    if (out.size() == 3){
+   //     //do nothing
+   // }
 
-        //do nothing
-    }
+   // else if(out.size() == 0) {
 
-    else if(out.size() == 0) {
+   // result.push_back(vps[0]);
+   // result.push_back(vps[1]);
+   // result.push_back(vps[2]);
 
-    result = inP; 
-
-    }
-
-
-    else if (out.size() == 2) {
-
-        for (int i = 0; i < out.size(); i++) {
-            for (int j = 0; j < in.size(); j++) {
+   // }
 
 
-                float t = LEFT.lineSegmentIntersection(out[i].pos, in[j].pos);
-                Vertex vpn;
-                vpn.pos = outP[i].pos + t * (inP[j].pos - outP[i].pos);
-                vpn.color = outP[i].color + t * (inP[j].color - outP[i].color);
-                result.push_back(vpn);
-            }
-        }
+   // else if (out.size() == 2) {
 
-        for (int i = out.size(); i < (in.size() + out.size()); i++){
-            //printf("i: %i\n",i);
+   //     for (int i = 0; i < out.size(); i++) {
+   //         for (int j = 0; j < in.size(); j++) {
 
-            Vertex vpn;
-            vpn = inP[i - out.size()];
-            result.push_back(vpn);
-        }
-    }
+   //             float t = LEFT.lineSegmentIntersection(vs[out[i]].pos, vs[in[j]].pos);
+   //             Vertex vpn;
+   //             vpn.pos = vps[out[i]].pos + t * (vps[in[j]].pos - vps[out[i]].pos);
+   //             vpn.color = vps[out[i]].color + t * (vps[in[j]].color - vps[out[i]].color);
+   //             result.push_back(vpn);
+   //         }
+   //     }
 
-    else if (out.size() == 1) {
+   //     for (int i = out.size(); i < (in.size() + out.size()); i++){
+   //         //printf("i: %i\n",i);
 
-        //for (int j = 0; j < in.size(); j++) {
-        //    float t = LEFT.lineSegmentIntersection(out[0].pos, in[j].pos);
-        //    Vertex vpn;
-        //    vpn.pos = outP[0].pos + t * (inP[j].pos - outP[0].pos);
-        //    vpn.color = outP[0].color + t * (inP[j].color - outP[0].color);
-        //    result.push_back(vpn);
-        //    result.push_back(inP[j]);
-        //}
-        
-        float t0 = LEFT.lineSegmentIntersection(out[0].pos, in[0].pos);
-        float t1 = LEFT.lineSegmentIntersection(out[0].pos, in[1].pos);
-        Vertex vpn0, vpn1;
-        vpn0.pos = outP[0].pos + t0 * (inP[0].pos - outP[0].pos);
-        vpn0.color = outP[0].color + t0 * (inP[0].color - outP[0].color);
-        vpn1.pos = outP[0].pos + t1 * (inP[1].pos - outP[0].pos);
-        vpn1.color = outP[0].color + t1 * (inP[1].color - outP[0].color);
+   //         Vertex vpn;
+   //         vpn = vps[in[i - out.size()]];
+   //         result.push_back(vpn);
+   //     }
+   // }
 
-        if (vpn1.pos.y > vpn0.pos.y) { 
-        
-            result.push_back(vpn1);
-            result.push_back(vpn0);
+   // else if (out.size() == 1) {
+
+   //     float t0 = LEFT.lineSegmentIntersection(vs[out[0]].pos, vs[in[0]].pos);
+   //     float t1 = LEFT.lineSegmentIntersection(vs[out[0]].pos, vs[in[1]].pos);
+   //     Vertex vpn0, vpn1;
+   //     vpn0.pos = vps[out[0]].pos + t0 * (vps[in[0]].pos - vps[out[0]].pos);
+   //     vpn0.color = vps[out[0]].color + t0 * (vps[in[0]].color - vps[out[0]].color);
+   //     vpn1.pos = vps[out[0]].pos + t1 * (vps[in[1]].pos - vps[out[0]].pos);
+   //     vpn1.color = vps[out[0]].color + t1 * (vps[in[1]].color - vps[out[0]].color);
 
 
-        } 
-        else {
+   //     if (vpn1.pos.y > vpn0.pos.y) { 
+   //         result.push_back(vpn1);
+   //         result.push_back(vpn0);
+   //     } 
+   //     else {
 
+   //         result.push_back(vpn0);
+   //         result.push_back(vpn1);
+   //     }
 
-            result.push_back(vpn0);
-            result.push_back(vpn1);
-        }
+   //     if (vps[in[1]].pos.y > vps[in[0]].pos.y) { 
+   //     
+   //         result.push_back(vps[in[1]]);
+   //         result.push_back(vps[in[0]]);
+   //     } 
+   //     else {
+   //         result.push_back(vps[in[0]]);
+   //         result.push_back(vps[in[1]]);
+   //     }
 
-        if (inP[1].pos.y > inP[0].pos.y) { 
-        
-            result.push_back(inP[1]);
-            result.push_back(inP[0]);
-
-
-        } 
-        else {
-            result.push_back(inP[0]);
-            result.push_back(inP[1]);
-
-
-        }
-
-
-        //result.push_back(vpn);
-        //result.push_back(inP[j]);
-
-
-    }
+   // }
 
 
 
    int num_verts = result.size();
+
+   printf("num_verts: %i\n", num_verts);
 
    //pp0 = vps[0].pos;
    //c0 = vps[0].color;
@@ -264,12 +273,18 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
    //pp2 = vps[2].pos;
    //c2 = vps[2].color;
 
+
+    //int num_verts = 3;
     
    Vertex pp [num_verts];
 
    for(int i = 0; i < num_verts; i++) {
 
     pp[i] = result[i]; 
+    //printf("result: i: %i, x: %f, y: %f, z: %f, w: %f", i, pp[i].pos.x, pp[i].pos.y, pp[i].pos.z, pp[i].pos.w);
+
+    //   pp[i] = vps[i];
+
     pp[i].pos = (1.f / pp[i].pos.w) * pp[i].pos;
 
    }
