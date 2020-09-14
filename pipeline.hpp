@@ -143,10 +143,10 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Plane FRONT = Plane(AFront, BFront, CFront, DFront);
 
     //BACK plane
-    float ABack = VP.c0.z + VP.c0.w;
-    float BBack = VP.c1.z + VP.c1.w;
-    float CBack = VP.c2.z + VP.c2.w;
-    float DBack = VP.c3.z + VP.c3.w;
+    float ABack = -VP.c0.z + VP.c0.w;
+    float BBack = -VP.c1.z + VP.c1.w;
+    float CBack = -VP.c2.z + VP.c2.w;
+    float DBack = -VP.c3.z + VP.c3.w;
     Plane BACK = Plane(ABack, BBack, CBack, DBack);
 
 

@@ -35,15 +35,15 @@ int computeCode3D(Vec4f pp) {
     }
     else if ((pp.x + offset) < pp.w) {
 
-   printf("RIGHT\n");
+   //printf("RIGHT\n");
 
         result |= RIGHT;
     }
-    printf("pp.x: %f, -pp.w %f, result: %i\n", pp.x + offset, -pp.w, result);
+    //printf("pp.x: %f, -pp.w %f, result: %i\n", pp.x + offset, -pp.w, result);
 
     if ((pp.y - offset) > -pp.w) {
 
-   printf("BOTTOM\n");
+   //printf("BOTTOM\n");
         result |= BOTTOM;
 
     } 
@@ -51,22 +51,24 @@ int computeCode3D(Vec4f pp) {
 
         result |= TOP;
     }
-    printf("pp.z: %f, pp.w %f, result: %i\n", pp.z - offset, pp.w, result);
 
-    if ((pp.z + offset) < pp.w) {
-    //if ((pp.z - offset) > -pp.w) {
-       printf("front culled\n"); 
+    //printf("pp.z: %f, pp.w %f, result: %i\n", pp.z - offset, pp.w, result);
+    //if ((pp.z + offset) < pp.w) {
+    //if ((pp.z + offset) < -pp.w) {
+    if (pp.w > -1.f) {
+       //printf("front culled\n"); 
 
         //result |= FRONT;
 
     } 
     
-    else if ((pp.z - offset) > -pp.w) {
+    //else if ((pp.z - offset) > -pp.w) {
+    else if (pp.w < -2.f) {
      //if ((pp.z - offset) > -pp.w) {
        
-       printf("back culled\n"); 
+       //printf("back culled\n"); 
 
-        //result |= BACK;
+       // result |= BACK;
     }
     return result;
 }
