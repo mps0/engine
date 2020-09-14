@@ -51,94 +51,20 @@ int computeCode3D(Vec4f pp) {
 }
 
 
-std::vector<Vertex> cohenSutherlandClip3D(Vec4f p0, Vec4f p1, Vertex vp0, Vertex vp1, Plane L, Plane R, Plane BO, Plane T, Plane F, Plane BA, bool &change0, bool &change1) {
+bool cohenSutherlandClip3D(Vec4f pp0, Vec4f pp1) {
 
-    int c0 = computeCode3D(vp0.pos);
-    int c1 = computeCode3D(vp1.pos);
-
-
-    std::vector<Vertex> result;
-
-    bool run = true;
+    int c0 = computeCode3D(pp0);
+    int c1 = computeCode3D(pp1);
 
 
-    while(run) {
-
-
-        //both inside
-        if(!(c0 | c1)) {
-            run = false;
-            break;
-        } 
-        //both in one of the areas defined above
-        else if(c0 & c1) {
-            vp0.visible = false;
-            vp1.visible = false;
-            run = false;
-            break;
-
-
-        }
-
-        else {
-
-
-            //at least one point is not inside. So pick largest bitcode to get it.
-            int c = c1 > c0 ? c1 : c0;
-
-            float t = 0.f;
-            if (c & LEFT) {
-
-
-                if (c == c0) t = L.lineSegmentIntersection(p0, p1);
-                else  t = L.lineSegmentIntersection(p1, p0);
-
-            }
-            else if (c & RIGHT) {
-                if (c == c0) t = R.lineSegmentIntersection(p0, p1);
-                else  t = R.lineSegmentIntersection(p1, p0);
-            }    
-            else if (c & BOTTOM) {
-                if (c == c0) t = BO.lineSegmentIntersection(p0, p1);
-                else  t = BO.lineSegmentIntersection(p1, p0);
-            }
-            else if (c & TOP) {
-                if (c == c0) t = T.lineSegmentIntersection(p0, p1);
-                else  t = T.lineSegmentIntersection(p1, p0);
-            }
-            else if (c & FRONT) {
-                if (c == c0) t = F.lineSegmentIntersection(p0, p1);
-                else  t = F.lineSegmentIntersection(p1, p0);
-            }
-            else if (c & BACK) {
-                if (c == c0) t = BA.lineSegmentIntersection(p0, p1);
-                else  t = BA.lineSegmentIntersection(p1, p0);
-            }
-
-
-            if ( (t > 0.f ) && (t < 1.f)) {
-            if (c == c0) {
-                vp0.pos = vp0.pos + t * (vp1.pos - vp0.pos);
-                vp0.color = vp0.color + t * (vp1.color - vp0.color);
-                change0 = true;
-
-                c0 = computeCode3D(vp0.pos);
-            } else {
-                vp1.pos = vp1.pos + t * (vp0.pos - vp1.pos);
-                vp1.color = vp1.color + t * (vp0.color - vp1.color);
-                change1 = true;
-
-                c1 = computeCode3D(vp1.pos);
-            }
-            }
-            else {break;}
-        }
+    //hidden
+    if(c0 & c1) {
+        return true;
     }
 
-    result.push_back(vp0);
-    result.push_back(vp1);
-
-    return result;
+    else {
+        return false;
+    }
 }
 
 

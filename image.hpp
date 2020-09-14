@@ -40,7 +40,7 @@ class Image{
            unsigned int idx = y * width + x; 
 
 
-          if (zDepth < zBuffer[idx]) {
+          if (zDepth > zBuffer[idx]) {
            pixels[idx] = color;
            zBuffer[idx] = zDepth;
            } 
@@ -57,7 +57,7 @@ class Image{
          //memset(zBuffer, t, width * height * sizeof(float));
          
          for(int i = 0; i < (width * height); i++) {
-            zBuffer[i] = FLT_MAX;
+            zBuffer[i] = -FLT_MAX;
          }
 
         }

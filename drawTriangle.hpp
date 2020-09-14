@@ -76,6 +76,16 @@
  */
 
 //void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Image* image) {
+//
+int clamp(int x, int min, int max) {
+
+    if (x < min) x = min;
+    else if (x > max) x = max;
+
+}
+
+
+
 void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, float z0, float z1, float z2, Image* image) {
 
 
@@ -89,6 +99,9 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
 
     x2 = p2.x;
     y2 = p2.y;
+
+
+
 
 
     int xMin = x0;
@@ -107,12 +120,19 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     if(y2 < yMin) yMin = y2;
     else if (p2.y > yMax) yMax = y2;
 
+    printf("xMin: %i, xMax: %i\n", xMin, xMax);
+    printf("yMin: %i, yMax: %i\n", yMin, yMax);
 
-    ////simple clipping (get the occasional negative val)
-    if (xMin < 0) xMin = 0;
-    if (xMax > SCREEN_WIDTH) xMax = SCREEN_WIDTH;
-    if (yMin < 0) yMin = 0;
-    if (yMax > SCREEN_HEIGHT) yMax = SCREEN_HEIGHT;
+    xMin = clamp(xMin, 0, SCREEN_WIDTH - 1);
+    xMax = clamp(xMax, 0, SCREEN_HEIGHT - 1);
+
+    yMin = clamp(yMin, 0, SCREEN_WIDTH - 1);
+    yMax = clamp(yMax, 0, SCREEN_HEIGHT - 1);
+
+    printf("xMin: %i, xMax: %i\n", xMin, xMax);
+    printf("yMin: %i, yMax: %i\n", yMin, yMax);
+
+
 
 
     int A21 = y1 - y2;
