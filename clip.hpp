@@ -23,52 +23,29 @@ const int YMAXCLIP = SCREEN_HEIGHT << 4;
 
 
 int computeCode3D(Vec4f pp) {
-
     int result = 0;
 
 
     float offset = 0.000001f; //deal with floating point error
     if ((pp.x - offset) > -pp.w) {
-
         result |= LEFT;
-
     }
     else if ((pp.x + offset) < pp.w) {
-
-   //printf("RIGHT\n");
-
         result |= RIGHT;
     }
-    //printf("pp.x: %f, -pp.w %f, result: %i\n", pp.x + offset, -pp.w, result);
 
     if ((pp.y - offset) > -pp.w) {
-
-   //printf("BOTTOM\n");
         result |= BOTTOM;
-
     } 
     else if ((pp.y + offset) < pp.w) {
-
         result |= TOP;
     }
-
-    //printf("pp.z: %f, pp.w %f, result: %i\n", pp.z - offset, pp.w, result);
-    //if ((pp.z + offset) < pp.w) {
-    //if ((pp.z + offset) < -pp.w) {
-    if (pp.w > -1.f) {
-       //printf("front culled\n"); 
-
-        //result |= FRONT;
-
+    if ((pp.z + offset) < -pp.w) {
+       result |= FRONT;
     } 
     
-    //else if ((pp.z - offset) > -pp.w) {
-    else if (pp.w < -2.f) {
-     //if ((pp.z - offset) > -pp.w) {
-       
-       //printf("back culled\n"); 
-
-       // result |= BACK;
+    else if ((pp.z - offset) > (-2.f * pp.w)) {
+       result |= BACK;
     }
     return result;
 }
@@ -109,14 +86,13 @@ std::vector<Vertex> cohenSutherlandClip3D(Vec4f p0, Vec4f p1, Vertex vp0, Vertex
             //at least one point is not inside. So pick largest bitcode to get it.
             int c = c1 > c0 ? c1 : c0;
 
-            float t;
+            float t = 0.f;
             if (c & LEFT) {
 
 
                 if (c == c0) t = L.lineSegmentIntersection(p0, p1);
                 else  t = L.lineSegmentIntersection(p1, p0);
 
-                printf("t: %f\n", t);
             }
             else if (c & RIGHT) {
                 if (c == c0) t = R.lineSegmentIntersection(p0, p1);
@@ -140,21 +116,22 @@ std::vector<Vertex> cohenSutherlandClip3D(Vec4f p0, Vec4f p1, Vertex vp0, Vertex
             }
 
 
+            if ( (t > 0.f ) && (t < 1.f)) {
             if (c == c0) {
                 vp0.pos = vp0.pos + t * (vp1.pos - vp0.pos);
                 vp0.color = vp0.color + t * (vp1.color - vp0.color);
                 change0 = true;
- //               break;
 
                 c0 = computeCode3D(vp0.pos);
             } else {
                 vp1.pos = vp1.pos + t * (vp0.pos - vp1.pos);
                 vp1.color = vp1.color + t * (vp0.color - vp1.color);
                 change1 = true;
-//                break;
 
                 c1 = computeCode3D(vp1.pos);
             }
+            }
+            else {break;}
         }
     }
 

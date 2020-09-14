@@ -1,6 +1,10 @@
 A software rasterizer I am writing from scratch (window/input management through SDL2).
 
-3D frustum clipping working for left/right/top/bottom planes. Some bug for special cases with near/far planes that I have to think about. I've realized that implementing frustum clipping is not a trivial task, and may explain the lack of resources on the subject in CG books and online.
+Full 3D frustum clipping working!:
+
+<img src="vids/frustum_clipping_all_planes.gif" width="300">
+
+3D frustum clipping working for left/right/top/bottom planes. Some bug for special cases with near/far planes that I have to think about.
 
 <img src="vids/frustum_clipping_3d_left_right_top_bottom.gif" width="300">
 
