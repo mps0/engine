@@ -38,7 +38,7 @@ int main(void) {
 
 
     //Asset* triangle = new Triangle(Vec3f(0.f, -0.5f, -1.f), Vec3f(0.f, 0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
-    Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.f), Vec3f(0.f, -0.5f, -1.f), Vec3f(-1.0f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.0f), Vec3f(0.f, -0.5f, -1.0f), Vec3f(-1.0f, 0.5f, -1.0f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
     //Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2); //Asset* box = new Box(Vec3f(0.f, 0.f, -1.f), 0.5f, 0.5f, 0.5f);
 
     std::vector<Asset*> assets;
@@ -46,7 +46,7 @@ int main(void) {
     //assets.push_back(grid);
     //assets.push_back(box);
 
-    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 5.f));
+    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
 
     bool run = true; 
     while(run) {

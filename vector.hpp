@@ -30,6 +30,9 @@ template<class T> class Vec2 {
 
         }
 
+        Vec2 operator+(Vec2 v) {
+            return Vec2(x + v.x, y + v.y);
+        }
         Vec2 operator-(Vec2 v) {
             return Vec2(x - v.x, y - v.y);
         }
@@ -41,6 +44,11 @@ template<class T> class Vec2 {
 };
 typedef Vec2<int> Vec2i;
 typedef Vec2<float> Vec2f;
+
+template<class T>
+Vec2<T> operator*(T a, Vec2<T> V) {
+    return Vec2<T>(a * V.x, a * V.y);
+}
 
 
 template<class T>

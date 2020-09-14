@@ -26,35 +26,48 @@ int computeCode3D(Vec4f pp) {
 
     int result = 0;
 
-    printf("pp.x: %f, -pp.w %f\n", pp.x, -pp.w);
 
-    if (pp.x > -pp.w) {
+    float offset = 0.000001f; //deal with floating point error
+    if ((pp.x - offset) > -pp.w) {
 
         result |= LEFT;
 
-    } else if (pp.x < pp.w) {
+    }
+    else if ((pp.x + offset) < pp.w) {
+
+   printf("RIGHT\n");
 
         result |= RIGHT;
     }
+    printf("pp.x: %f, -pp.w %f, result: %i\n", pp.x + offset, -pp.w, result);
 
-    //if (pp.y < -pp.w) {
+    if ((pp.y - offset) > -pp.w) {
 
-    //    result |= BOTTOM;
+   printf("BOTTOM\n");
+        result |= BOTTOM;
 
-    //} else if (pp.y > pp.w) {
+    } 
+    else if ((pp.y + offset) < pp.w) {
 
-    //    result |= TOP;
-    //}
+        result |= TOP;
+    }
+    printf("pp.z: %f, pp.w %f, result: %i\n", pp.z - offset, pp.w, result);
 
-    //if (pp.z < pp.w) {
+    if ((pp.z + offset) < pp.w) {
+    //if ((pp.z - offset) > -pp.w) {
+       printf("front culled\n"); 
 
-    //    result |= FRONT;
+        //result |= FRONT;
 
-    //} else if (pp.z > pp.z) {
-    //    
+    } 
+    
+    else if ((pp.z - offset) > -pp.w) {
+     //if ((pp.z - offset) > -pp.w) {
+       
+       printf("back culled\n"); 
 
-    //    result |= BACK;
-    //}
+        //result |= BACK;
+    }
     return result;
 }
 
@@ -80,6 +93,8 @@ std::vector<Vertex> cohenSutherlandClip3D(Vec4f p0, Vec4f p1, Vertex vp0, Vertex
         } 
         //both in one of the areas defined above
         else if(c0 & c1) {
+            vp0.visible = false;
+            vp1.visible = false;
             run = false;
             break;
 
@@ -102,28 +117,41 @@ std::vector<Vertex> cohenSutherlandClip3D(Vec4f p0, Vec4f p1, Vertex vp0, Vertex
                 printf("t: %f\n", t);
             }
             else if (c & RIGHT) {
+                if (c == c0) t = R.lineSegmentIntersection(p0, p1);
+                else  t = R.lineSegmentIntersection(p1, p0);
             }    
             else if (c & BOTTOM) {
+                if (c == c0) t = BO.lineSegmentIntersection(p0, p1);
+                else  t = BO.lineSegmentIntersection(p1, p0);
             }
             else if (c & TOP) {
+                if (c == c0) t = T.lineSegmentIntersection(p0, p1);
+                else  t = T.lineSegmentIntersection(p1, p0);
             }
             else if (c & FRONT) {
+                if (c == c0) t = F.lineSegmentIntersection(p0, p1);
+                else  t = F.lineSegmentIntersection(p1, p0);
             }
             else if (c & BACK) {
+                if (c == c0) t = BA.lineSegmentIntersection(p0, p1);
+                else  t = BA.lineSegmentIntersection(p1, p0);
             }
 
 
             if (c == c0) {
                 vp0.pos = vp0.pos + t * (vp1.pos - vp0.pos);
                 vp0.color = vp0.color + t * (vp1.color - vp0.color);
+                change0 = true;
+ //               break;
 
                 c0 = computeCode3D(vp0.pos);
-                change0 = true;
             } else {
                 vp1.pos = vp1.pos + t * (vp0.pos - vp1.pos);
                 vp1.color = vp1.color + t * (vp0.color - vp1.color);
-                c1 = computeCode3D(vp1.pos);
                 change1 = true;
+//                break;
+
+                c1 = computeCode3D(vp1.pos);
             }
         }
     }

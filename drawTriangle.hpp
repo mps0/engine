@@ -2,6 +2,7 @@
 #define DRAWTRIANGLE_HPP
 
 #include <algorithm>
+#include <cmath>
 
 #include "image.hpp"
 #include "vector.hpp"
@@ -95,6 +96,8 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     int yMin = y0;
     int yMax = y0;
 
+
+
     if (x1 < xMin) xMin = x1;
     else if (x1 > xMax) xMax = x1;
     if(y1 < yMin) yMin = y1;
@@ -103,6 +106,9 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     else if (p2.x > xMax) xMax = x2;
     if(y2 < yMin) yMin = y2;
     else if (p2.y > yMax) yMax = y2;
+
+    printf("XMIN: %i, XMAX: %i\n", xMin, xMax);
+    printf("YMIN: %i, YMAX: %i\n", yMin, yMax);
 
 
     ////simple clipping
@@ -180,45 +186,83 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
 }
 
 //void drawQuad(Vec2i p0, Vec2i p1, Vec2i p2, Vec2i p3, Vec4f c0, Vec4f c1, Vec4f c2, Vec4f c3, float z0, float z1, float z2, float z3, Image* image) {
-void drawQuad(Vec2i* p, Vec4f* c, float* z, Image* image) {
+void drawQuad(Vec2i* p, Vec4f* color, float* z, Image* image) {
 
-//Vec2i a, b, c, d;
-//
-//a = p[0];
-//b = p[1];
-//c = p[2];
-//d = p[3];
-
-    drawTriangle(p[0], p[1], p[2], c[0], c[1], c[2], z[0], z[1], z[2], image);
+    Vec2f a, b, c, d;
+    
+    a = Vec2f(p[0].x, p[0].y);
+    b = Vec2f(p[1].x, p[1].y);
+    c = Vec2f(p[2].x, p[2].y);
+    d = Vec2f(p[3].x, p[3].y);
 
 
-int lab = (p[1] - p[0]).lengthSq();
-int lac = (p[2] - p[0]).lengthSq();
-int lcb = (p[2] - p[1]).lengthSq();
+    Vec2f cent = 0.25f * (a + b + c + d);
 
-if((lab > lac) && (lab > lcb)) {
-
-    drawTriangle(p[0], p[1], p[3], c[0], c[1], c[3], z[0], z[1], z[3], image);
-
-  }
-
-if((lac > lab) && (lac > lcb)) {
-
-    drawTriangle(p[0], p[2], p[3], c[0], c[2], c[3], z[0], z[2], z[3], image);
-
-  }
-
-if((lcb > lac) && (lcb > lab)) {
-  //else {
-
-    drawTriangle(p[2], p[1], p[3], c[2], c[1], c[3], z[2], z[1], z[3], image);
-
-  }
+    a = a - cent;
+    b = b - cent;
+    c = c - cent;
+    d = d - cent;
 
 
+   float angles[4];
+   int idx[4];
+
+    idx[0] = 0;
+    idx[1] = 1;
+    idx[2] = 2;
+    idx[3] = 3;
+
+    angles[0] = atan2(a.y, a.x);
+    angles[1] = atan2(b.y, b.x);
+    angles[2] = atan2(c.y, c.x);
+    angles[3] = atan2(d.y, d.x);
 
 
-       
+    bool run = true;
+    while(run) {
+
+    if(angles[idx[1]] < angles[idx[0]]) {
+        std::swap(idx[1], idx[0]);
+        continue;
+    }
+    if(angles[idx[2]] < angles[idx[1]]) {
+        std::swap(idx[2], idx[1]);
+        continue;
+    }
+    if(angles[idx[3]] < angles[idx[2]]) {
+        std::swap(idx[3], idx[2]);
+        continue;
+    }
+
+    run = false;
+    }
+
+
+
+    //for (int i = 0; i < 4; i++){
+    //printf("angles[%i]: %f\n", i, angles[i]);
+    //}
+    //for (int i = 0; i < 4; i++){
+    //printf("idx[%i]: %i\n", i, idx[i]);
+    //}
+
+
+   drawTriangle(p[idx[0]], p[idx[1]], p[idx[2]], color[idx[0]], color[idx[1]], color[idx[2]], z[idx[0]], z[idx[1]], z[idx[2]], image);
+
+   drawTriangle(p[idx[2]], p[idx[3]], p[idx[0]], color[idx[2]], color[idx[3]], color[idx[0]], z[idx[2]], z[idx[3]], z[idx[0]], image);
+
+
+   //drawTriangle(p[0], p[2], p[3], c[0], c[2], c[3], z[0], z[2], z[3], image);
+
+   //drawTriangle(p[0], p[3], p[1], c[0], c[3], c[1], z[0], z[3], z[1], image);
+   //drawTriangle(p[1], p[3], p[0], c[1], c[3], c[0], z[1], z[3], z[0], image);
+
+
+
+
+
+
+
 
 
 }

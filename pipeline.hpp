@@ -1,7 +1,8 @@
 #ifndef PIPELINE_HPP
 #define PIPELINE_HPP
 
-#include<stdio.h>
+#include <stdio.h>
+#include <algorithm>
 
 #include "camera.hpp"
 #include "matrix.hpp"
@@ -114,11 +115,39 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Plane LEFT = Plane(ALeft, BLeft, CLeft, DLeft);
 
     //right plane
-    float ARight = VP.c0.x + VP.c0.w;
-    float BRight = VP.c1.x + VP.c1.w;
-    float CRight = VP.c2.x + VP.c2.w;
-    float DRight = VP.c3.x + VP.c3.w;
+    float ARight = -VP.c0.x + VP.c0.w;
+    float BRight = -VP.c1.x + VP.c1.w;
+    float CRight = -VP.c2.x + VP.c2.w;
+    float DRight = -VP.c3.x + VP.c3.w;
     Plane RIGHT = Plane(ARight, BRight, CRight, DRight);
+
+    //bottom plane
+    float ABottom = VP.c0.y + VP.c0.w;
+    float BBottom = VP.c1.y + VP.c1.w;
+    float CBottom = VP.c2.y + VP.c2.w;
+    float DBottom = VP.c3.y + VP.c3.w;
+    Plane BOTTOM = Plane(ABottom, BBottom, CBottom, DBottom);
+
+    //top plane
+    float ATop = -VP.c0.y + VP.c0.w;
+    float BTop = -VP.c1.y + VP.c1.w;
+    float CTop = -VP.c2.y + VP.c2.w;
+    float DTop = -VP.c3.y + VP.c3.w;
+    Plane TOP = Plane(ATop, BTop, CTop, DTop);
+
+    //front plane
+    float AFront = VP.c0.z + VP.c0.w;
+    float BFront = VP.c1.z + VP.c1.w;
+    float CFront = VP.c2.z + VP.c2.w;
+    float DFront = VP.c3.z + VP.c3.w;
+    Plane FRONT = Plane(AFront, BFront, CFront, DFront);
+
+    //BACK plane
+    float ABack = VP.c0.z + VP.c0.w;
+    float BBack = VP.c1.z + VP.c1.w;
+    float CBack = VP.c2.z + VP.c2.w;
+    float DBack = VP.c3.z + VP.c3.w;
+    Plane BACK = Plane(ABack, BBack, CBack, DBack);
 
 
     //planes[0] = LEFT;
@@ -149,25 +178,39 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
 
     std::vector<Vertex> result;
-    bool change00 = false;
-    bool change01 = false;
-    bool change10 = false;
-    bool change11 = false;
-    bool change20 = false;
-    bool change21 = false;
-    std::vector<Vertex> result0 = cohenSutherlandClip3D(p0, p1, vps[0], vps[1], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change00, change01);
-    if (change00) result.push_back(result0[0]);
-    if (change01) result.push_back(result0[1]);
-    std::vector<Vertex> result1 = cohenSutherlandClip3D(p1, p2, vps[1], vps[2], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change10, change11);
-    if (change10) result.push_back(result1[0]);
-    if (change11) result.push_back(result1[1]);
-    std::vector<Vertex> result2 = cohenSutherlandClip3D(p2, p0, vps[2], vps[0], LEFT, RIGHT, RIGHT, RIGHT, RIGHT, RIGHT, change20, change21);
-    if (change20) result.push_back(result2[0]);
-    if (change21) result.push_back(result2[1]);
+    bool changea0 = false;
+    bool changea1 = false;
+    bool changeb1 = false;
+    bool changeb2 = false;
+    bool changec2 = false;
+    bool changec0 = false;
 
-    if (!(change00 | change21)) result.push_back(vps[0]);
-    if (!(change01 | change10)) result.push_back(vps[1]);
-    if (!(change11 | change20)) result.push_back(vps[2]);
+    printf("p0,p1\n");
+    std::vector<Vertex> resulta = cohenSutherlandClip3D(p0, p1, vps[0], vps[1], LEFT, RIGHT, BOTTOM, TOP, FRONT, BACK, changea0, changea1);
+    if (changea0) result.push_back(resulta[0]);
+    if (changea1) result.push_back(resulta[1]);
+    printf("p1,p2\n");
+    std::vector<Vertex> resultb = cohenSutherlandClip3D(p1, p2, vps[1], vps[2], LEFT, RIGHT, BOTTOM, TOP, FRONT, BACK, changeb1, changeb2);
+    if (changeb1) result.push_back(resultb[0]);
+    if (changeb2) {result.push_back(resultb[1]);
+        printf("p2 pushed back\n");
+        
+        
+    }
+    printf("p2,p0\n");
+    std::vector<Vertex> resultc = cohenSutherlandClip3D(p2, p0, vps[2], vps[0], LEFT, RIGHT, BOTTOM, TOP, FRONT, BACK, changec2, changec0);
+    if (changec2) result.push_back(resultc[0]);
+    if (changec0) result.push_back(resultc[1]);
+
+    if(!(resulta[0].visible | resultb[0].visible | resultc[0].visible)) {
+            printf("THROW AWAY\n");
+        return;
+    } 
+
+    if (!(changea0 | changec0)) result.push_back(vps[0]);
+    if (!(changea1 | changeb1)) result.push_back(vps[1]);
+    if (!(changeb2 | changec2)) result.push_back(vps[2]);
+
 
 
 
@@ -376,6 +419,7 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
 
     }
+
 
 
 
