@@ -1,9 +1,6 @@
 #ifndef DRAWTRIANGLE_HPP
 #define DRAWTRIANGLE_HPP
 
-#include <algorithm>
-#include <cmath>
-
 #include "image.hpp"
 #include "vector.hpp"
 
@@ -197,103 +194,5 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
         f01xy = f01xy + B01;
     }
 }
-
-//void drawQuad(Vec2i p0, Vec2i p1, Vec2i p2, Vec2i p3, Vec4f c0, Vec4f c1, Vec4f c2, Vec4f c3, float z0, float z1, float z2, float z3, Image* image) {
-void drawQuad(Vec2i* p, Vec4f* color, float* z, Image* image) {
-
-    Vec2f a, b, c, d;
-    
-    a = Vec2f(p[0].x, p[0].y);
-    b = Vec2f(p[1].x, p[1].y);
-    c = Vec2f(p[2].x, p[2].y);
-    d = Vec2f(p[3].x, p[3].y);
-
-
-    Vec2f cent = 0.25f * (a + b + c + d);
-
-    a = a - cent;
-    b = b - cent;
-    c = c - cent;
-    d = d - cent;
-
-
-   float angles[4];
-   int idx[4];
-
-    idx[0] = 0;
-    idx[1] = 1;
-    idx[2] = 2;
-    idx[3] = 3;
-
-    angles[0] = atan2(a.y, a.x);
-    angles[1] = atan2(b.y, b.x);
-    angles[2] = atan2(c.y, c.x);
-    angles[3] = atan2(d.y, d.x);
-
-
-    bool run = true;
-    while(run) {
-
-    if(angles[idx[1]] < angles[idx[0]]) {
-        std::swap(idx[1], idx[0]);
-        continue;
-    }
-    if(angles[idx[2]] < angles[idx[1]]) {
-        std::swap(idx[2], idx[1]);
-        continue;
-    }
-    if(angles[idx[3]] < angles[idx[2]]) {
-        std::swap(idx[3], idx[2]);
-        continue;
-    }
-
-    run = false;
-    }
-
-
-
-    //for (int i = 0; i < 4; i++){
-    //printf("angles[%i]: %f\n", i, angles[i]);
-    //}
-    //for (int i = 0; i < 4; i++){
-    //printf("idx[%i]: %i\n", i, idx[i]);
-    //}
-
-
-   drawTriangle(p[idx[0]], p[idx[1]], p[idx[2]], color[idx[0]], color[idx[1]], color[idx[2]], z[idx[0]], z[idx[1]], z[idx[2]], image);
-
-   drawTriangle(p[idx[2]], p[idx[3]], p[idx[0]], color[idx[2]], color[idx[3]], color[idx[0]], z[idx[2]], z[idx[3]], z[idx[0]], image);
-
-
-   //drawTriangle(p[0], p[2], p[3], c[0], c[2], c[3], z[0], z[2], z[3], image);
-
-   //drawTriangle(p[0], p[3], p[1], c[0], c[3], c[1], z[0], z[3], z[1], image);
-   //drawTriangle(p[1], p[3], p[0], c[1], c[3], c[0], z[1], z[3], z[0], image);
-
-
-
-
-
-
-
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 #endif
