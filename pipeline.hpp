@@ -89,7 +89,7 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     //combine
     Mat4f view = rot * trans;
 
-    float n = -1.f; //near plane
+    float n = -1.0f; //near plane
     float f = -2.f; //far plane
     Mat4f persp = Mat4f();
     persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
@@ -140,12 +140,15 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Vec2i pi1 = Vec2i((int)pp1.x, (int)pp1.y);
     Vec2i pi2 = Vec2i((int)pp2.x, (int)pp2.y);
 
-    printf("pi0.x: %f, pi0.y: %f\n", pi0.x, pi0.y);
-    printf("pi1.x: %f, pi1.y: %f\n", pi1.x, pi1.y);
-    printf("pi2.x: %f, pi2.y: %f\n", pi2.x, pi2.y);
+    //printf("pi0.x: %i, pi0.y: %i\n", pi0.x, pi0.y);
+    //printf("pi1.x: %i, pi1.y: %i\n", pi1.x, pi1.y);
+    //printf("pi2.x: %i, pi2.y: %i\n", pi2.x, pi2.y);
 
-    drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
+    //drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
 
+    drawLine(pi0, pi1, c0, c1, z0, z1, image);
+    drawLine(pi1, pi2, c1, c2, z1, z2, image);
+    drawLine(pi2, pi0, c2, c0, z2, z0, image);
 
 
 

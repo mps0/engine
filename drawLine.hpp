@@ -7,6 +7,7 @@
 
 #include "vector.hpp"
 #include "image.hpp"
+#include "clip.hpp"
 
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 640
@@ -69,6 +70,10 @@ void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image*
 
 
 
+    bool visible = cohenSutherlandClip(p0, p1);
+
+    if (!visible) return;
+    
     bool switchOrder = p0.x > p1.x;
 
     if (switchOrder) {

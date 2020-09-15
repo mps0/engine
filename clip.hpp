@@ -7,6 +7,9 @@
 #include "vertex.hpp"
 #include "plane.hpp"
 
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 640
+
 
 const int INSIDE = 0; 
 const int LEFT = 1;
@@ -96,7 +99,7 @@ int computeCode(Vec2i p) {
 }
 
 
-void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
+bool cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
 
     p0.x <<= 4;
     p0.y <<= 4;
@@ -107,6 +110,8 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
     int c1 = computeCode(p1);
 
     bool run = true;
+
+    bool visible = true;
 
 
     while(run) {
@@ -119,10 +124,10 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
         } 
         //both in one of the areas defined above
         else if(c0 & c1) {
+                printf("hi\n");
             run = false;
+            visible = false;
             break;
-
-
         }
 
         else {
@@ -172,6 +177,8 @@ void cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
     p0.y >>= 4;
     p1.x >>= 4;
     p1.y >>= 4;
+
+    return visible;
 }
 
 

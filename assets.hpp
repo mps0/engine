@@ -4,7 +4,7 @@
 #include "vector.hpp"
 #include "pipeline.hpp"
 #include "vertex.hpp"
-
+#include "obj.hpp"
 
 class Asset{
     public:
@@ -18,7 +18,7 @@ class Asset{
         Asset(int num_vertices, int num_triangles) : num_vertices(num_vertices), num_triangles(num_triangles)  {
 
             vBuffer = new Vertex[num_vertices];
-            iBuffer = new int[num_triangles];
+            iBuffer = new int[3 * num_triangles];
 
         }
         ~Asset() {
@@ -26,6 +26,7 @@ class Asset{
             delete[] iBuffer; 
         }
 };
+
 
 
 class Triangle : public Asset{
@@ -40,7 +41,7 @@ class Triangle : public Asset{
        num_vertices = 3;
        num_triangles = 1;
        vBuffer = new Vertex[num_vertices]; 
-       iBuffer = new int[num_triangles];
+       iBuffer = new int[3 * num_triangles];
 
        vBuffer[0].pos = Vec4f(p0.x, p0.y, p0.z, 1.f);
        vBuffer[1].pos = Vec4f(p1.x, p1.y, p1.z, 1.f);
@@ -223,6 +224,58 @@ class Grid : public Asset {
 };
 
 
+class OBJmesh : public Asset{
+    public:
+
+    std::vector<Vertex> verts;
+    std::vector<int> idx;
+
+
+    OBJmesh() {
+
+        obj(verts, idx);
+
+        printf("verts size: %i\n", verts.size());
+
+        for (int i = 0; i < verts.size(); i++) {
+
+            printf("verts[%i].pos.z: %f\n",i,verts[i].pos.z);
+
+        }
+
+        printf("idx size: %i\n", idx.size());
+
+        for (int i = 0; i < idx.size(); i++) {
+
+            printf("idx[%i]: %i\n",i,idx[i]);
+
+        }
+
+    num_vertices = verts.size();
+    num_triangles = idx.size() / 3; 
+
+
+       vBuffer = new Vertex[num_vertices]; 
+       iBuffer = new int[3 * num_triangles];
+
+        for (int i = 0; i < verts.size(); i++) {
+
+            vBuffer[i] = verts[i];
+
+        }
+
+        for (int i = 0; i < idx.size(); i++) {
+
+            iBuffer[i] = idx[i];
+
+        }
+
+    }
+
+
+
+
+};
 
 
 

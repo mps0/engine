@@ -13,6 +13,7 @@
 #include "assets.hpp"
 #include "camera.hpp"
 #include "vertex.hpp"
+#include "obj.hpp"
 
 
 
@@ -21,6 +22,7 @@
 
 
 int main(void) {
+
     SDL_Event event;
     SDL_Window* window;
     SDL_Surface* surface;
@@ -38,14 +40,18 @@ int main(void) {
 
 
     //Asset* triangle = new Triangle(Vec3f(0.f, -0.5f, -1.f), Vec3f(0.f, 0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
-    Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
     //Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2);  
     //Asset* box = new Box(Vec3f(0.f, 0.f, -1.5f), 0.5f, 0.5f, 0.5f);
+    //
+    //
+    Asset* obj = new OBJmesh();
 
     std::vector<Asset*> assets;
-    assets.push_back(triangle);
+    //assets.push_back(triangle);
     //assets.push_back(grid);
    //assets.push_back(box);
+   assets.push_back(obj);
 
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
 
