@@ -2,10 +2,17 @@ A software rasterizer I am writing from scratch (window/input management through
 
 
 Clipping:
+
 <img src="vids/face.gif" width="300">
 
 
-Line drawing a projection:
+Camera:
+
+<img src="vids/wireframe_grid_cube.gif" width="300">
+
+
+Line drawing and projection:
+
 <img src="vids/spinning_triangle.gif" width="300">
 
 
