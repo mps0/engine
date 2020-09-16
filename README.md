@@ -1,5 +1,8 @@
 A software rasterizer I am writing from scratch (window/input management through SDL2, and OBJ loading using https://github.com/Bly7/OBJ-Loader)
 
+Full-face Clipping, fragment shader:
+
+<img src="vids/full_face_culling_shading.gif" width="300">
 
 Clipping:
 
