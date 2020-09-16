@@ -70,6 +70,10 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Vec4f p1 = v1.pos;
     Vec4f p2 = v2.pos;
 
+    Vec3f n0 = v0.normal;
+    Vec3f n1 = v1.normal;
+    Vec3f n2 = v2.normal;
+
     //transform from world-space to camera space
 
     //first match rotation
@@ -90,7 +94,13 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     Mat4f view = rot * trans;
 
     float n = -1.0f; //near plane
-    float f = -2.f; //far plane
+    float f = -30.f; //far plane
+
+    //float alpha = 3.141592 * .25f;
+    //float t = tan(alpha * .5f) * abs(n);
+    //float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
+    //float b = - t;
+    //float l = - r;
     Mat4f persp = Mat4f();
     persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
     persp.c1 = Vec4f(0.f, n, 0.f, 0.f);
@@ -144,11 +154,13 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     //printf("pi1.x: %i, pi1.y: %i\n", pi1.x, pi1.y);
     //printf("pi2.x: %i, pi2.y: %i\n", pi2.x, pi2.y);
 
-    //drawTriangle(pi0, pi1, pi2, c0, c1, c2, z0, z1, z2, image);
 
-    drawLine(pi0, pi1, c0, c1, z0, z1, image);
-    drawLine(pi1, pi2, c1, c2, z1, z2, image);
-    drawLine(pi2, pi0, c2, c0, z2, z0, image);
+
+    drawTriangle(pi0, pi1, pi2, c0, c1, c2, n0, n1, n2, z0, z1, z2, image);
+
+    //drawLine(pi0, pi1, c0, c1, z0, z1, image);
+    //drawLine(pi1, pi2, c1, c2, z1, z2, image);
+    //drawLine(pi2, pi0, c2, c0, z2, z0, image);
 
 
 

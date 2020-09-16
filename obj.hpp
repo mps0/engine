@@ -58,13 +58,17 @@ void obj(std::vector<Vertex> &verts, std::vector<int> &idx) {
 
                 Vertex v;
 
-                float scale = 0.75f;
+                float scale = 10.f;
 
                 v.pos.x = scale * curMesh.Vertices[j].Position.X;
                 v.pos.y = scale * curMesh.Vertices[j].Position.Y;
-                v.pos.z = scale * curMesh.Vertices[j].Position.Z - 1.f;
+                v.pos.z = scale * curMesh.Vertices[j].Position.Z - 15.f;
 
                 v.color = Vec4f(1.f, 1.f, 1.f, 1.f);
+
+                v.normal.x = curMesh.Vertices[j].Normal.X;
+                v.normal.y = curMesh.Vertices[j].Normal.Y;
+                v.normal.z = curMesh.Vertices[j].Normal.Z;
 
                 verts.push_back(v);
 

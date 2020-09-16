@@ -7,8 +7,8 @@
 #include "vertex.hpp"
 #include "plane.hpp"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
+#define SCREEN_WIDTH 1080
+#define SCREEN_HEIGHT 720
 
 
 const int INSIDE = 0; 
@@ -20,37 +20,74 @@ const int FRONT = 16;
 const int BACK = 32;
 
 const int XMINCLIP = 0 << 4;
-const int XMAXCLIP = SCREEN_WIDTH << 4;
+const int XMAXCLIP = (SCREEN_WIDTH - 1) << 4;
 const int YMINCLIP = 0 << 4;
-const int YMAXCLIP = SCREEN_HEIGHT << 4;
+const int YMAXCLIP = (SCREEN_HEIGHT -1) << 4;
 
 
 int computeCode3D(Vec4f pp) {
     int result = 0;
 
 
+    //TODO: make this part of camera class
+    float n = -1.f;
+    float f = -30.f;
+    //float alpha = 3.141592 * .5f;
+    float alpha = 3.141592 * .8f;
+    float t = tan(alpha * .5f) * abs(n);
+    float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
+    float b = - t;
+    float l = - r;
+
+
+    //printf("n: %f, alpha: %f, t: %f, r: %f, b: %f, l: %f\n",n,alpha,t,r,b,l);
+
     float offset = 0.000001f; //deal with floating point error
-    if ((pp.x - offset) > -pp.w) {
+    if ((pp.x - offset) > pp.w * l) {
         result |= LEFT;
     }
-    else if ((pp.x + offset) < pp.w) {
+    else if ((pp.x + offset) < pp.w * r) {
         result |= RIGHT;
     }
 
-    if ((pp.y - offset) > -pp.w) {
+    if ((pp.y - offset) > pp.w * b) {
         result |= BOTTOM;
     } 
-    else if ((pp.y + offset) < pp.w) {
+    else if ((pp.y + offset) < pp.w * t) {
         result |= TOP;
     }
-    if ((pp.z + offset) < -pp.w) {
+    if ((pp.z + offset) < pp.w * n) {
        result |= FRONT;
     } 
     
-    else if ((pp.z - offset) > (-2.f * pp.w)) {
+    else if ((pp.z - offset) > (f * pp.w)) {
        result |= BACK;
     }
     return result;
+
+
+    //float offset = 0.000001f; //deal with floating point error
+    //if ((pp.x - offset) > -pp.w) {
+    //    result |= LEFT;
+    //}
+    //else if ((pp.x + offset) < pp.w) {
+    //    result |= RIGHT;
+    //}
+
+    //if ((pp.y - offset) > -pp.w) {
+    //    result |= BOTTOM;
+    //} 
+    //else if ((pp.y + offset) < pp.w) {
+    //    result |= TOP;
+    //}
+    //if ((pp.z + offset) < -pp.w) {
+    //   result |= FRONT;
+    //} 
+    //
+    //else if ((pp.z - offset) > (-2.f * pp.w)) {
+    //   result |= BACK;
+    //}
+    //return result;
 }
 
 

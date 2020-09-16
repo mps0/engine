@@ -9,9 +9,6 @@
 #include "image.hpp"
 #include "clip.hpp"
 
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
-
 /* We can express a line in its general form: F(x,y) = Ax + By + C = 0
  * Starting from slope intercept form, y = mx + b
  *

@@ -83,7 +83,7 @@ int clamp(int x, int min, int max) {
 
 
 
-void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, float z0, float z1, float z2, Image* image) {
+void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Vec3f n0, Vec3f n1, Vec3f n2, float z0, float z1, float z2, Image* image) {
 
 
     int x0, y0, x1, y1, x2, y2;
@@ -117,17 +117,17 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
     if(y2 < yMin) yMin = y2;
     else if (p2.y > yMax) yMax = y2;
 
-    printf("xMin: %i, xMax: %i\n", xMin, xMax);
-    printf("yMin: %i, yMax: %i\n", yMin, yMax);
+    //printf("xMin: %i, xMax: %i\n", xMin, xMax);
+    //printf("yMin: %i, yMax: %i\n", yMin, yMax);
 
     xMin = clamp(xMin, 0, SCREEN_WIDTH - 1);
-    xMax = clamp(xMax, 0, SCREEN_HEIGHT - 1);
+    xMax = clamp(xMax, 0, SCREEN_WIDTH - 1);
 
-    yMin = clamp(yMin, 0, SCREEN_WIDTH - 1);
+    yMin = clamp(yMin, 0, SCREEN_HEIGHT - 1);
     yMax = clamp(yMax, 0, SCREEN_HEIGHT - 1);
 
-    printf("xMin: %i, xMax: %i\n", xMin, xMax);
-    printf("yMin: %i, yMax: %i\n", yMin, yMax);
+    //printf("xMin: %i, xMax: %i\n", xMin, xMax);
+    //printf("yMin: %i, yMax: %i\n", yMin, yMax);
 
 
 
@@ -166,13 +166,32 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, fl
                     if (gamma >= 0.f) {
 
                         
-                        Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
-                        int R = RGBAf.x * 255.f; 
-                        int G = RGBAf.y * 255.f; 
-                        int B = RGBAf.z * 255.f; 
+                        //Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
+                        //int R = RGBAf.x * 255.f; 
+                        //int G = RGBAf.y * 255.f; 
+                        //int B = RGBAf.z * 255.f; 
+
 
                         
                         float depth = alpha * z0 + beta * z1 + gamma * z2;
+                        Vec3f n = alpha * n0 + beta * n1 + gamma * n2; 
+
+
+                        Vec3f light = Vec3f(0.f, 1.f, 1.f);
+
+                        float l = Vec3dot(light.normalize(), n.normalize()); 
+
+                        if( l < 0.f) {
+
+                            l = 0.f;
+                        }
+
+                        int R = l * 255.f; 
+                        int G = l * 255.f; 
+                        int B = l * 255.f; 
+                        
+                        
+
                         image->setPixel(x, y, Vec3i(R, G, B),depth);
 
                     }
