@@ -49,13 +49,9 @@ class Image{
 
         void clear() {
 
-        int t  = 100.f;
-
          memset(pixels, 0, width * height * sizeof(unsigned int));
 
          //can't use memset for floats
-         //memset(zBuffer, t, width * height * sizeof(float));
-         
          for(int i = 0; i < (width * height); i++) {
             zBuffer[i] = -FLT_MAX;
          }

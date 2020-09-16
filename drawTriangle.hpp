@@ -3,6 +3,7 @@
 
 #include "image.hpp"
 #include "vector.hpp"
+#include "shader.hpp"
 
 
 
@@ -83,19 +84,19 @@ int clamp(int x, int min, int max) {
 
 
 
-void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Vec3f n0, Vec3f n1, Vec3f n2, float z0, float z1, float z2, Image* image) {
-
+//void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Vec3f n0, Vec3f n1, Vec3f n2, float z0, float z1, float z2, Image* image) {
+void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
 
     int x0, y0, x1, y1, x2, y2;
 
-    x0 = p0.x;
-    y0 = p0.y;
+    x0 = (int)v0.pos.x;
+    y0 = (int)v0.pos.y;
 
-    x1 = p1.x;
-    y1 = p1.y;
+    x1 = (int)v1.pos.x;
+    y1 = (int)v1.pos.y;
 
-    x2 = p2.x;
-    y2 = p2.y;
+    x2 = (int)v2.pos.x;
+    y2 = (int)v2.pos.y;
 
 
 
@@ -113,9 +114,9 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Ve
     if(y1 < yMin) yMin = y1;
     else if (y1 > yMax) yMax = y1;
     if (x2 < xMin) xMin = x2;
-    else if (p2.x > xMax) xMax = x2;
+    else if (x2 > xMax) xMax = x2;
     if(y2 < yMin) yMin = y2;
-    else if (p2.y > yMax) yMax = y2;
+    else if (y2 > yMax) yMax = y2;
 
     //printf("xMin: %i, xMax: %i\n", xMin, xMax);
     //printf("yMin: %i, yMax: %i\n", yMin, yMax);
@@ -153,60 +154,29 @@ void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Ve
 
     int x, y;
     for(y = yMin; y < yMax + 1; y++) {
+
+        float f21xyXLOOP = f21xy;
+        float f20xyXLOOP = f20xy;
+        float f01xyXLOOP = f01xy;
         for(x = xMin; x < xMax + 1; x++) {
-
-            float alpha = f21xy / f21x0y0;
-            float beta = f20xy / f20x1y1;
-            float gamma = f01xy / f01x2y2;
-
+            float alpha = f21xyXLOOP / f21x0y0;
+            float beta = f20xyXLOOP / f20x1y1;
+            float gamma = f01xyXLOOP / f01x2y2;
 
             //TODO: TRIANGLE PIXEL EDGES
             if (alpha >= 0.f) {
                 if (beta >= 0.f) {
                     if (gamma >= 0.f) {
 
-                        
-                        //Vec4f RGBAf = alpha * c0 + beta * c1 + gamma * c2;
-                        //int R = RGBAf.x * 255.f; 
-                        //int G = RGBAf.y * 255.f; 
-                        //int B = RGBAf.z * 255.f; 
 
-
-                        
-                        float depth = alpha * z0 + beta * z1 + gamma * z2;
-                        Vec3f n = alpha * n0 + beta * n1 + gamma * n2; 
-
-
-                        Vec3f light = Vec3f(0.f, 1.f, 1.f);
-
-                        float l = Vec3dot(light.normalize(), n.normalize()); 
-
-                        if( l < 0.f) {
-
-                            l = 0.f;
-                        }
-
-                        int R = l * 255.f; 
-                        int G = l * 255.f; 
-                        int B = l * 255.f; 
-                        
-                        
-
-                        image->setPixel(x, y, Vec3i(R, G, B),depth);
+                        fragmentShader(v0, v1, v2, Vec2i(x, y), Vec3f(alpha, beta, gamma), image);
 
                     }
                 }
             }
-            if(x == xMax) { //reset x contributions as we move to next row of pixels.
-                f21xy = f21xy - (xMax - xMin) * A21;
-                f20xy = f20xy - (xMax - xMin) * A20;
-                f01xy = f01xy - (xMax - xMin) * A01;
-            }
-            else {
-                f21xy = f21xy + A21;
-                f20xy = f20xy + A20;
-                f01xy = f01xy + A01;
-            }
+            f21xyXLOOP = f21xyXLOOP + A21;
+            f20xyXLOOP = f20xyXLOOP + A20;
+            f01xyXLOOP = f01xyXLOOP + A01;
         } 
         f21xy = f21xy + B21;
         f20xy = f20xy + B20;

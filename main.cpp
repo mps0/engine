@@ -21,6 +21,8 @@
 #define SCREEN_HEIGHT 720
 
 
+Mat4f view, persp, VP, viewPort;
+
 int main(void) {
 
     SDL_Event event;
@@ -57,6 +59,46 @@ int main(void) {
 
     bool run = true; 
     while(run) {
+    //transform from world-space to camera space
+
+    //first match rotation
+    Mat4f rot = Mat4f();
+    rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
+    rot.c1 = Vec4f(cam->u.y, cam->v.y, cam->w.y, 0.f);
+    rot.c2 = Vec4f(cam->u.z, cam->v.z, cam->w.z, 0.f);
+    rot.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+
+    //now, line up origins
+    Mat4f trans = Mat4f();
+    trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
+    trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
+    trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
+    trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
+
+    //combine
+    view = rot * trans;
+
+    float n = -1.0f; //near plane
+    float f = -30.f; //far plane
+
+    //float alpha = 3.141592 * .25f;
+    //float t = tan(alpha * .5f) * abs(n);
+    //float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
+    //float b = - t;
+    //float l = - r;
+    persp = Mat4f();
+    persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
+    persp.c1 = Vec4f(0.f, n, 0.f, 0.f);
+    persp.c2 = Vec4f(0.f, 0.f, f + n, 1);
+    persp.c3 = Vec4f(0.f, 0.f, -f * n, 0.f);
+
+    VP = persp * view;
+
+    //Viewport transform
+    viewPort.c0 = Vec4f(SCREEN_WIDTH / 2.f, 0.f, 0.f, 0.f);
+    viewPort.c1 = Vec4f(0.f, -SCREEN_HEIGHT / 2.f, 0.f, 0.f);
+    viewPort.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
+    viewPort.c3 = Vec4f((SCREEN_WIDTH - 1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 0.f, 1.f);
         auto exec_start = std::chrono::high_resolution_clock::now();
 
         while( SDL_PollEvent( &event ) != 0 ){

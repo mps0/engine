@@ -91,7 +91,11 @@ class Vec3 {
         Vec3 operator+(Vec3 v) {
             return Vec3(x + v.x, y + v.y, z + v.z);
         }
+
 };
+
+
+
 typedef Vec3<int> Vec3i;
 typedef Vec3<float> Vec3f;
 
@@ -152,8 +156,6 @@ T Vec4dot(Vec4<T> v0, Vec4<T> v1) {
            v0.z * v1.z +
            v0.w * v1.w;
 }
-
-
 
 
 

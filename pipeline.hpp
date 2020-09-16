@@ -59,66 +59,37 @@
  */
 
 
+extern Mat4f view;
+extern Mat4f persp;
+extern Mat4f VP;
+extern Mat4f viewPort;
 
 void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
-
-    Vec4f c0 = v0.color;
-    Vec4f c1 = v1.color;
-    Vec4f c2 = v2.color;
 
     Vec4f p0 = v0.pos;
     Vec4f p1 = v1.pos;
     Vec4f p2 = v2.pos;
 
-    Vec3f n0 = v0.normal;
-    Vec3f n1 = v1.normal;
-    Vec3f n2 = v2.normal;
 
-    //transform from world-space to camera space
+    p0 = view * p0;  
+    p1 = view * p1;  
+    p2 = view * p2;  
 
-    //first match rotation
-    Mat4f rot = Mat4f();
-    rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
-    rot.c1 = Vec4f(cam->u.y, cam->v.y, cam->w.y, 0.f);
-    rot.c2 = Vec4f(cam->u.z, cam->v.z, cam->w.z, 0.f);
-    rot.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+    Vec3f l01 = Vec3f(p1.x, p1.y, p1.z) - Vec3f(p0.x, p0.y, p0.z);  
+    Vec3f l02 = Vec3f(p2.x, p2.y, p2.z) - Vec3f(p0.x, p0.y, p0.z);  
 
-    //now, line up origins
-    Mat4f trans = Mat4f();
-    trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
-    trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
-    trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-    trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
+    Vec3f n = Vec3cross(l01, l02);
 
-    //combine
-    Mat4f view = rot * trans;
+    float dot = Vec3dot(n, cam->forward);
 
-    float n = -1.0f; //near plane
-    float f = -30.f; //far plane
+    if (dot > 0.f) {return;}
 
-    //float alpha = 3.141592 * .25f;
-    //float t = tan(alpha * .5f) * abs(n);
-    //float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
-    //float b = - t;
-    //float l = - r;
-    Mat4f persp = Mat4f();
-    persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
-    persp.c1 = Vec4f(0.f, n, 0.f, 0.f);
-    persp.c2 = Vec4f(0.f, 0.f, f + n, 1);
-    persp.c3 = Vec4f(0.f, 0.f, -f * n, 0.f);
-
-    Mat4f VP = persp * view;
 
     //clip space
     Vec4f pp0 = VP * p0;
     Vec4f pp1 = VP * p1;
     Vec4f pp2 = VP * p2;
 
-
-    //zDepths
-    float z0 = pp0.w;
-    float z1 = pp1.w;
-    float z2 = pp2.w;
 
     bool hidden01 = cohenSutherlandClip3D(pp0, pp1);
     bool hidden12 = cohenSutherlandClip3D(pp1, pp2);
@@ -135,28 +106,18 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     pp2 = (1.f / pp2.w) * pp2; 
 
 
-    //Viewport transform
-    Mat4f viewPort = Mat4f();
-    viewPort.c0 = Vec4f(SCREEN_WIDTH / 2.f, 0.f, 0.f, 0.f);
-    viewPort.c1 = Vec4f(0.f, -SCREEN_HEIGHT / 2.f, 0.f, 0.f);
-    viewPort.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-    viewPort.c3 = Vec4f((SCREEN_WIDTH - 1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 0.f, 1.f);
-
+    //view port transform
     pp0 = viewPort * pp0; 
     pp1 = viewPort * pp1; 
     pp2 = viewPort * pp2; 
 
-    Vec2i pi0 = Vec2i((int)pp0.x, (int)pp0.y);
-    Vec2i pi1 = Vec2i((int)pp1.x, (int)pp1.y);
-    Vec2i pi2 = Vec2i((int)pp2.x, (int)pp2.y);
 
-    //printf("pi0.x: %i, pi0.y: %i\n", pi0.x, pi0.y);
-    //printf("pi1.x: %i, pi1.y: %i\n", pi1.x, pi1.y);
-    //printf("pi2.x: %i, pi2.y: %i\n", pi2.x, pi2.y);
+    v0.pos = pp0;    
+    v1.pos = pp1;
+    v2.pos = pp2;
 
 
-
-    drawTriangle(pi0, pi1, pi2, c0, c1, c2, n0, n1, n2, z0, z1, z2, image);
+    drawTriangle(v0, v1, v2, image);
 
     //drawLine(pi0, pi1, c0, c1, z0, z1, image);
     //drawLine(pi1, pi2, c1, c2, z1, z2, image);
