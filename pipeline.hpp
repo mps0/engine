@@ -12,6 +12,7 @@
 #include "plane.hpp"
 #include "vertex.hpp"
 #include "clip.hpp"
+#include "shader.hpp"
 
 //perspective transform, withwith n = near plane, and f = far plane
 //
@@ -66,55 +67,43 @@ extern Mat4f viewPort;
 
 void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
-    Vec4f p0 = v0.pos;
-    Vec4f p1 = v1.pos;
-    Vec4f p2 = v2.pos;
 
-
-    p0 = view * p0;  
-    p1 = view * p1;  
-    p2 = view * p2;  
-
-    Vec3f l01 = Vec3f(p1.x, p1.y, p1.z) - Vec3f(p0.x, p0.y, p0.z);  
-    Vec3f l02 = Vec3f(p2.x, p2.y, p2.z) - Vec3f(p0.x, p0.y, p0.z);  
-
+    //back-face culling
+    Vec3f l01 = Vec3f(v1.pos.x, v1.pos.y, v1.pos.z) - Vec3f(v0.pos.x, v0.pos.y, v0.pos.z);  
+    Vec3f l02 = Vec3f(v2.pos.x, v2.pos.y, v2.pos.z) - Vec3f(v0.pos.x, v0.pos.y, v0.pos.z);  
     Vec3f n = Vec3cross(l01, l02);
 
-    float dot = Vec3dot(n, cam->forward);
+    Vec3f cent = 0.33333333f * Vec4toVec3((v0.pos + v1.pos + v2.pos));
+
+    float dot = Vec3dot(n, cent - cam->pos);
 
     if (dot > 0.f) {return;}
 
 
-    //clip space
-    Vec4f pp0 = VP * p0;
-    Vec4f pp1 = VP * p1;
-    Vec4f pp2 = VP * p2;
+    vertexShader(v0);
+    vertexShader(v1);
+    vertexShader(v2);
 
 
-    bool hidden01 = cohenSutherlandClip3D(pp0, pp1);
-    bool hidden12 = cohenSutherlandClip3D(pp1, pp2);
-    bool hidden20 = cohenSutherlandClip3D(pp2, pp0);
+    bool hidden01 = cohenSutherlandClip3D(v0.pos, v1.pos);
+    bool hidden12 = cohenSutherlandClip3D(v1.pos, v2.pos);
+    bool hidden20 = cohenSutherlandClip3D(v2.pos, v0.pos);
 
     if(hidden01 && hidden12 && hidden20) {
         return;
     } 
 
 
-    //NDC transform
-    pp0 = (1.f / pp0.w) * pp0; 
-    pp1 = (1.f / pp1.w) * pp1; 
-    pp2 = (1.f / pp2.w) * pp2; 
+    //NDC transform (perspective divide)
+    v0.pos = (1.f / v0.pos.w) * v0.pos; 
+    v1.pos = (1.f / v1.pos.w) * v1.pos; 
+    v2.pos = (1.f / v2.pos.w) * v2.pos; 
 
 
     //view port transform
-    pp0 = viewPort * pp0; 
-    pp1 = viewPort * pp1; 
-    pp2 = viewPort * pp2; 
-
-
-    v0.pos = pp0;    
-    v1.pos = pp1;
-    v2.pos = pp2;
+    v0.pos = viewPort * v0.pos; 
+    v1.pos = viewPort * v1.pos; 
+    v2.pos = viewPort * v2.pos; 
 
 
     drawTriangle(v0, v1, v2, image);
@@ -122,9 +111,6 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
     //drawLine(pi0, pi1, c0, c1, z0, z1, image);
     //drawLine(pi1, pi2, c1, c2, z1, z2, image);
     //drawLine(pi2, pi0, c2, c0, z2, z0, image);
-
-
-
 }
 
 

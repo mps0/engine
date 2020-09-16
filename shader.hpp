@@ -7,26 +7,26 @@
 #include "vertex.hpp"
 
 
+extern Mat4f VP;
 
-//Vertex vShader(Vertex &v) {
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//}
-//
-//
+bool vertexShader(Vertex &v) {
+
+    //clip space
+    v.pos = VP * v.pos;
+
+    return true;
+}
 
 
-void fragmentShader(Vertex v0, Vertex v1, Vertex v2, Vec2i pi, Vec3f bary, Image* image) {
+
+
+
+
+
+
+
+
+bool fragmentShader(Vertex v0, Vertex v1, Vertex v2, Vec3f bary, int pixX, int pixY, Image* image) {
 
 
 
@@ -45,13 +45,9 @@ void fragmentShader(Vertex v0, Vertex v1, Vertex v2, Vec2i pi, Vec3f bary, Image
     Vec3f colorf = l * Vec3f(255.f, 255.f, 255.f);
     Vec3i RGB = Vec3i((int)colorf.x, (int)colorf.y, (int)colorf.z);
 
-    image->setPixel(pi.x, pi.y, RGB, depth);
+    image->setPixel(pixX, pixY, RGB, depth);
 
-
-
-
-
-
+    return true;
 }
 
 

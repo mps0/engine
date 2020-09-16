@@ -92,6 +92,7 @@ class Vec3 {
             return Vec3(x + v.x, y + v.y, z + v.z);
         }
 
+
 };
 
 
@@ -114,9 +115,11 @@ Vec3<T> Vec3cross(Vec3<T> a, Vec3<T> b) {
 template<class T>
 T Vec3dot(Vec3<T> v0, Vec3<T> v1) {
     return v0.x * v1.x +
-           v0.y * v1.y +
-           v0.z * v1.z;
+        v0.y * v1.y +
+        v0.z * v1.z;
 }
+
+
 
 template<class T>
 class Vec4 {
@@ -155,6 +158,13 @@ T Vec4dot(Vec4<T> v0, Vec4<T> v1) {
            v0.y * v1.y +
            v0.z * v1.z +
            v0.w * v1.w;
+}
+
+template<class T>
+Vec3<T> Vec4toVec3(Vec4<T> v) {
+
+    return Vec3<T>(v.x, v.y, v.z);
+
 }
 
 

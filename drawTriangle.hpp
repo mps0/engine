@@ -169,7 +169,7 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
                     if (gamma >= 0.f) {
 
 
-                        fragmentShader(v0, v1, v2, Vec2i(x, y), Vec3f(alpha, beta, gamma), image);
+                        fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, image);
 
                     }
                 }
