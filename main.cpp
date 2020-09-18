@@ -51,9 +51,9 @@ int main(void) {
 
     std::vector<Asset*> assets;
     //assets.push_back(triangle);
-    assets.push_back(grid);
+    //assets.push_back(grid);
     //assets.push_back(box);
-    //assets.push_back(obj);
+    assets.push_back(obj);
 
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
 

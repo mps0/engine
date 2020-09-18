@@ -5,10 +5,10 @@ CFLAGS = -w
 LFLAGS = -lSDL2
 
 
-rast: main.o drawLine.o vector.o image.o camera.o pipeline.o matrix.o drawTriangle.o assets.o plane.o vertex.o clip.o OBJ_Loader.o obj.o shader.o
+rast: main.o drawLine.o vector.o image.o camera.o pipeline.o matrix.o drawTriangle.o assets.o plane.o vertex.o clip.o OBJ_Loader.o obj.o shader.o texture.o
 	$(CXX) $(CFLAGS) -v -o rast main.o $(LFLAGS)
 
-main.o: main.cpp camera.hpp drawLine.hpp image.hpp vector.hpp pipeline.hpp matrix.hpp drawTriangle.hpp assets.hpp plane.hpp vertex.hpp clip.hpp OBJ_Loader.h obj.hpp shader.hpp
+main.o: main.cpp camera.hpp drawLine.hpp image.hpp vector.hpp pipeline.hpp matrix.hpp drawTriangle.hpp assets.hpp plane.hpp vertex.hpp clip.hpp OBJ_Loader.h obj.hpp shader.hpp texture.hpp
 	$(CXX) $(CFLAGS) -c main.cpp -o main.o
 
 drawLine.o: drawLine.hpp vector.hpp image.hpp
@@ -53,3 +53,6 @@ OBJ_Loader.o: OBJ_Loader.h
 
 shader.o: shader.hpp vector.hpp
 	$(CCXX) $(CFLAGS) -c shader.hpp -o shader.o
+
+texture.o: texture.hpp vector.hpp
+	$(CCXX) $(CFLAGS) -c texture.hpp -o texture.o

@@ -70,6 +70,10 @@ void obj(std::vector<Vertex> &verts, std::vector<int> &idx) {
                 v.normal.y = curMesh.Vertices[j].Normal.Y;
                 v.normal.z = curMesh.Vertices[j].Normal.Z;
 
+
+                v.uv.x = curMesh.Vertices[j].TextureCoordinate.X;
+                v.uv.y = curMesh.Vertices[j].TextureCoordinate.Y;
+
                 verts.push_back(v);
 
 			}

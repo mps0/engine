@@ -203,6 +203,7 @@ class Grid : public Asset {
 
                         vBuffer[i * (cols + 1) + j].pos = Vec4f(j * xstep + xstart, ystart - i* ystep, origin.z, 1.f);
                         vBuffer[i * (cols + 1) + j].color = color;
+                        vBuffer[i * (cols + 1) + j].uv = Vec2f(((float)j)/cols, (1.f - (float)i/rows));
                     }
                 }
 
