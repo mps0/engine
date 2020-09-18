@@ -62,7 +62,7 @@ void obj(std::vector<Vertex> &verts, std::vector<int> &idx) {
 
                 v.pos.x = scale * curMesh.Vertices[j].Position.X;
                 v.pos.y = scale * curMesh.Vertices[j].Position.Y;
-                v.pos.z = scale * curMesh.Vertices[j].Position.Z - 15.f;
+                v.pos.z = scale * curMesh.Vertices[j].Position.Z;
 
                 v.color = Vec4f(1.f, 1.f, 1.f, 1.f);
 

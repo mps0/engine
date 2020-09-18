@@ -136,7 +136,7 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
     //int A21 = y1 - y2;
     //int B21 = x2 - x1; 
     //int C21 = x1 * y2 - y1 * x2;
-    //flip to get other sign
+    //flip to get positive sign
     int A21 = y2 - y1;
     int B21 = x1 - x2; 
     int C21 = -x1 * y2 + y1 * x2;

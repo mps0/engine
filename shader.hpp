@@ -11,6 +11,7 @@ extern Mat4f VP;
 
 bool vertexShader(Vertex &v) {
 
+
     //clip space
     v.pos = VP * v.pos;
 

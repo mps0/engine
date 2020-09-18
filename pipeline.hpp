@@ -60,13 +60,14 @@
  */
 
 
-extern Mat4f view;
-extern Mat4f persp;
-extern Mat4f VP;
-extern Mat4f viewPort;
+extern Mat4f model, viewPort;
 
 void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
+
+    v0.pos = model * v0.pos;
+    v1.pos = model * v1.pos;
+    v2.pos = model * v2.pos;
 
     //back-face culling
     Vec3f l01 = Vec3f(v1.pos.x, v1.pos.y, v1.pos.z) - Vec3f(v0.pos.x, v0.pos.y, v0.pos.z);  
