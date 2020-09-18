@@ -133,46 +133,46 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
 
 
 
-    int A21 = y1 - y2;
-    int B21 = x2 - x1; 
-    int C21 = x1 * y2 - y1 * x2;
-    float f21xy = A21 * xMin  + B21 * yMin + C21;
+    //int A21 = y1 - y2;
+    //int B21 = x2 - x1; 
+    //int C21 = x1 * y2 - y1 * x2;
+    //flip to get other sign
+    int A21 = y2 - y1;
+    int B21 = x1 - x2; 
+    int C21 = -x1 * y2 + y1 * x2;
+    int f21xy = A21 * xMin  + B21 * yMin + C21;
     float f21x0y0 = A21 * x0  + B21 * y0 + C21;
 
     int A20 = y0 - y2;
     int B20 = x2 - x0; 
     int C20 = x0 * y2 - y0 * x2;
-    float f20xy = A20 * xMin  + B20 * yMin + C20;
+    int f20xy = A20 * xMin  + B20 * yMin + C20;
     float f20x1y1 = A20 * x1  + B20 * y1 + C20;
 
     int A01 = y1 - y0;
     int B01 = x0 - x1; 
     int C01 = x1 * y0 - y1 * x0;
-    float f01xy = A01 * xMin  + B01 * yMin + C01;
+    int f01xy = A01 * xMin  + B01 * yMin + C01;
     float f01x2y2 = A01 * x2  + B01 * y2 + C01;
-
 
     int x, y;
     for(y = yMin; y < yMax + 1; y++) {
 
-        float f21xyXLOOP = f21xy;
-        float f20xyXLOOP = f20xy;
-        float f01xyXLOOP = f01xy;
+        int f21xyXLOOP = f21xy;
+        int f20xyXLOOP = f20xy;
+        int f01xyXLOOP = f01xy;
         for(x = xMin; x < xMax + 1; x++) {
-            float alpha = f21xyXLOOP / f21x0y0;
-            float beta = f20xyXLOOP / f20x1y1;
-            float gamma = f01xyXLOOP / f01x2y2;
 
             //TODO: TRIANGLE PIXEL EDGES
-            if (alpha >= 0.f) {
-                if (beta >= 0.f) {
-                    if (gamma >= 0.f) {
+            if((f21xyXLOOP | f20xyXLOOP | f01xyXLOOP) >= 0) { 
+
+                float alpha = f21xyXLOOP / f21x0y0;
+                float beta = f20xyXLOOP / f20x1y1;
+                float gamma = f01xyXLOOP / f01x2y2;
 
 
-                        fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, image);
+                fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, image);
 
-                    }
-                }
             }
             f21xyXLOOP = f21xyXLOOP + A21;
             f20xyXLOOP = f20xyXLOOP + A20;
