@@ -63,21 +63,28 @@
  *
  */
 
-void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image* image) {
+//void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image* image) {
+void drawLine(Vertex v0, Vertex v1, Image* image) {
 
+    bool switchOrder = v0.pos.x > v1.pos.x;
+
+    if (switchOrder) {
+
+        std::swap(v0, v1);
+    }
+
+    Vec2i p0, p1, p2;
+
+    p0.x = (int)v0.pos.x;
+    p0.y = (int)v0.pos.y;
+    p1.x = (int)v1.pos.x;
+    p1.y = (int)v1.pos.y;
 
 
     bool visible = cohenSutherlandClip(p0, p1);
 
     if (!visible) return;
     
-    bool switchOrder = p0.x > p1.x;
-
-    if (switchOrder) {
-
-        std::swap(p0, p1);
-        std::swap(c0, c1);
-    }
 
     int X0 = p0.x;
     int Y0 = p0.y;
@@ -87,6 +94,12 @@ void drawLine(Vec2i p0, Vec2i p1, Vec4f c0, Vec4f c1, float z0, float z1, Image*
 
     int dx = X1 - X0;
     int dy = Y1 - Y0;
+
+    Vec4f c0 = v0.color;
+    Vec4f c1 = v1.color;
+
+    float z0 = v0.pos.z;
+    float z1 = v1.pos.z;
 
 
     int x = X0;

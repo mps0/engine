@@ -16,7 +16,7 @@
 
 
 
-#define SCREEN_WIDTH 1080
+#define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 720
 
 
@@ -41,18 +41,19 @@ int main(void) {
 
 
     //Asset* triangle = new Triangle(Vec3f(0.f, -0.5f, -1.f), Vec3f(0.f, 0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
-    // Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
-    //Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.f), 2.f, 2.f, 2, 2);  
-    //Asset* box = new Box(Vec3f(0.f, 0.f, -1.5f), 0.5f, 0.5f, 0.5f);
+    //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+     //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    Asset* grid = new Grid(Vec3f(0.f, 0.f, -1.5f), 1.5f, 1.5f, 1, 1);  
+    //Asset* box = new Box(Vec3f(0.f, 0.f, -3.f), 0.5f, 0.5f, 0.5f);
     //
     //
     Asset* obj = new OBJmesh();
 
     std::vector<Asset*> assets;
     //assets.push_back(triangle);
-    //assets.push_back(grid);
+    assets.push_back(grid);
     //assets.push_back(box);
-    assets.push_back(obj);
+    //assets.push_back(obj);
 
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
 
@@ -63,7 +64,8 @@ int main(void) {
         model.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
         model.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
         model.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-        model.c3 = Vec4f(0.f, 0.f, -15.f, 1.f);
+        //model.c3 = Vec4f(0.f, 0.f, -15.f, 1.f);
+        model.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
 
 
 
@@ -165,6 +167,11 @@ int main(void) {
                 v0 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k]];
                 v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
                 v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
+
+                //printf("v0: (%f, %f, %f)\n", v0.pos.x, v0.pos.y, v0.pos.z);
+                //printf("v1: (%f, %f, %f)\n", v1.pos.x, v1.pos.y, v1.pos.z);
+                //printf("v2: (%f, %f, %f)\n", v2.pos.x, v2.pos.y, v2.pos.z);
+
 
                 pipeline(&image, v0, v1, v2, cam);
             }

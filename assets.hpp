@@ -88,7 +88,6 @@ class Box : public Asset {
 
                 vBuffer = new Vertex[num_vertices];
                 vBuffer[0].pos = p0;
-                vBuffer[0].pos = p0;
                 vBuffer[1].pos = p1;
                 vBuffer[2].pos = p2;
                 vBuffer[3].pos = p3;
@@ -113,59 +112,59 @@ class Box : public Asset {
 
                 iBuffer = new int[num_triangles * 3];
                 //bottom face
-                iBuffer[0] = 0;
-                iBuffer[1] = 2;
-                iBuffer[2] = 3;
+                iBuffer[0] = 1;
+                iBuffer[1] = 0;
+                iBuffer[2] = 2;
 
-                iBuffer[3] = 3;
-                iBuffer[4] = 1;
-                iBuffer[5] = 0;
+                iBuffer[3] = 2;
+                iBuffer[4] = 3;
+                iBuffer[5] = 1;
 
+                //top face
+                iBuffer[6] = 4;
+                iBuffer[7] = 5;
+                iBuffer[8] = 7;
+
+                iBuffer[9] = 7;
+                iBuffer[10] = 6;
+                iBuffer[11] = 4;
+
+                //front face
+                iBuffer[12] = 0;
+                iBuffer[13] = 1;
+                iBuffer[14] = 5;
+
+                iBuffer[15] = 5;
+                iBuffer[16] = 4;
+                iBuffer[17] = 0;
 
                 //left face
-                iBuffer[12] = 2;
-                iBuffer[13] = 6;
-                iBuffer[14] = 4;
+                iBuffer[18] = 2;
+                iBuffer[19] = 0;
+                iBuffer[20] = 4;
 
-                iBuffer[15] = 4;
-                iBuffer[16] = 0;
-                iBuffer[17] = 2;
+                iBuffer[21] = 4;
+                iBuffer[22] = 6;
+                iBuffer[23] = 2;
 
                 //right face
-                iBuffer[18] = 1;
-                iBuffer[19] = 5;
-                iBuffer[20] = 7;
-
-                iBuffer[21] = 7;
-                iBuffer[22] = 3;
-                iBuffer[23] = 1;
-
-                //back face
-                iBuffer[24] = 2;
-                iBuffer[25] = 6;
+                iBuffer[24] = 1;
+                iBuffer[25] = 3;
                 iBuffer[26] = 7;
 
                 iBuffer[27] = 7;
-                iBuffer[28] = 3;
-                iBuffer[29] = 2;
+                iBuffer[28] = 5;
+                iBuffer[29] = 1;
 
-                //top face
-                iBuffer[30] = 4;
-                iBuffer[31] = 6;
-                iBuffer[32] = 7;
+                //back face
+                iBuffer[30] = 3;
+                iBuffer[31] = 2;
+                iBuffer[32] = 6;
 
-                iBuffer[33] = 7;
-                iBuffer[34] = 5;
-                iBuffer[35] = 4;
+                iBuffer[33] = 6;
+                iBuffer[34] = 7;
+                iBuffer[35] = 3;
 
-                //front face
-                iBuffer[6] = 0;
-                iBuffer[7] = 4;
-                iBuffer[8] = 5;
-
-                iBuffer[9] = 5;
-                iBuffer[10] = 1;
-                iBuffer[11] = 0;
 
             }
 };
@@ -194,6 +193,7 @@ class Grid : public Asset {
 
                 float xstep = width / cols;
                 float ystep = length / rows;
+                printf("xstep: %f, ystep: %f\n", xstep, ystep);
 
                 float xstart = origin.x - 0.5f * width;
                 float ystart = origin.y + 0.5f * length;
@@ -210,11 +210,19 @@ class Grid : public Asset {
                     for (int j = 0; j < cols; j++) {
                         int startIdx = 6 * (i * (cols) + j);
 
+                        //iBuffer[startIdx] = (i + 1) * (cols + 1) + j;
+                        //iBuffer[startIdx + 1] = i * (cols + 1) + j;
+                        //iBuffer[startIdx + 2] = i * (cols + 1) + j + 1;
+                        //iBuffer[startIdx + 3] = i * (cols + 1) + j + 1;;
+                        //iBuffer[startIdx + 4] = (i + 1) * (cols + 1) + j + 1;
+                        //iBuffer[startIdx + 5] = (i + 1) * (cols + 1) + j;
+
                         iBuffer[startIdx] = (i + 1) * (cols + 1) + j;
-                        iBuffer[startIdx + 1] = i * (cols + 1) + j;
-                        iBuffer[startIdx + 2] = i * (cols + 1) + j + 1;
-                        iBuffer[startIdx + 3] = i * (cols + 1) + j + 1;;
-                        iBuffer[startIdx + 4] = (i + 1) * (cols + 1) + j + 1;
+                        iBuffer[startIdx + 1] = (i + 1) * (cols + 1) + j + 1;
+                        iBuffer[startIdx + 2] = i * (cols + 1) + j + 1;;
+
+                        iBuffer[startIdx + 3] = i * (cols + 1) + j + 1;
+                        iBuffer[startIdx + 4] = i * (cols + 1) + j;
                         iBuffer[startIdx + 5] = (i + 1) * (cols + 1) + j;
 
                     }

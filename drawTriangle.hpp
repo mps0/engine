@@ -27,20 +27,20 @@
  *
  * Consider the line, which segment 02, lies on:
  *
- * F21(x,y) = 0  (To the left of the line (remember, y positive down.) F21 < 0, and to the right F21 > 0;)
+ * F12(x,y) = 0  (To the left of the line  F12 > 0, and to the right F12 < 0;)
  *
  * So the perpindicualr distance to the line is:
  *
- * d = k * F21(x, y)   (k is the scaling factor)
+ * d = k * F12(x, y)   (k is the scaling factor)
  *
  * At (x,y) = (x0, y0) we know that alpha is 1. We can use this to determine k:
  * 
- * 1 = k * F21(x0, y0)
- * => k = 1 / F21(x0, y0)
+ * 1 = k * F12(x0, y0)
+ * => k = 1 / F12(x0, y0)
  * 
  * Plugging it back in,
  * 
- * alpha = F21(x, y) / F21(x0, y0);
+ * alpha = F12(x, y) / F12(x0, y0);
  * 
  * And following the same logic,
  * 
@@ -53,17 +53,17 @@
  * 
  * Plugging in triangle vertex information:
  * 
- * y = (y1 - y2) / (x1 - x2)x + b
- * (x1 - x2)y = (y1 - y2)x  + C
- * (y1 - y2)x + (x2 - x1)y + C = 0 (This is the general form again, Ax + By + C = 0)
- * C = (x1 - x2)y + (y2 - y1)x = 
- * C = x1 * y - x2 * y + y2 * x - y1 * x
+ * y = (y2 - y1) / (x2 - x1)x + b
+ * (x2 - x1)y = (y2 - y1)x  + C
+ * (y2 - y1)x + (x1 - x2)y + C = 0 (This is the general form again, Ax + By + C = 0)
+ * C = (x2 - x1)y + (y1 - y2)x = 
+ * C = x2 * y - x1 * y + y1 * x - y2 * x
  * 
  * We know that (x2, y2) lies on the line:
- * C = x1 * y2 - x2 * y2 + y2 * x2 - y1 * x2
- * C = x1 * y2 - y1 * x2
+ * C = x2 * y2 - x1 * y2 + y1 * x2 - y2 * x2
+ * C = x2 * y1 - y2 * x1
  *
- * So F21(x,y) = (y1 - y2)x  + (x2 - x1)y + x1 * y2 - y1 * x2
+ * So F12(x,y) = (y2 - y1)x  + (x1 - x2)y + x2 * y1 - y2 * x1
  *
  * The other lines follow analogously.
  *
@@ -131,17 +131,19 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
     //printf("yMin: %i, yMax: %i\n", yMin, yMax);
 
 
+    int A01 = y1 - y0;
+    int B01 = x0 - x1; 
+    int C01 = x1 * y0 - y1 * x0;
+    int f01xy = A01 * xMin  + B01 * yMin + C01;
+    float f01x2y2 = A01 * x2  + B01 * y2 + C01;
 
 
-    //int A21 = y1 - y2;
-    //int B21 = x2 - x1; 
-    //int C21 = x1 * y2 - y1 * x2;
-    //flip to get positive sign
-    int A21 = y2 - y1;
-    int B21 = x1 - x2; 
-    int C21 = -x1 * y2 + y1 * x2;
-    int f21xy = A21 * xMin  + B21 * yMin + C21;
-    float f21x0y0 = A21 * x0  + B21 * y0 + C21;
+    int A12 = y2 - y1;
+    int B12 = x1 - x2; 
+    int C12 = x2 * y1 - y2 * x1;
+    int f12xy = A12 * xMin  + B12 * yMin + C12;
+    float f12x0y0 = A12 * x0  + B12 * y0 + C12;
+
 
     int A20 = y0 - y2;
     int B20 = x2 - x0; 
@@ -149,24 +151,23 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
     int f20xy = A20 * xMin  + B20 * yMin + C20;
     float f20x1y1 = A20 * x1  + B20 * y1 + C20;
 
-    int A01 = y1 - y0;
-    int B01 = x0 - x1; 
-    int C01 = x1 * y0 - y1 * x0;
-    int f01xy = A01 * xMin  + B01 * yMin + C01;
-    float f01x2y2 = A01 * x2  + B01 * y2 + C01;
+
+    //printf("f12xy: %i, f20xy: %i, f01xy: %i", f12xy, f20xy, f01xy);
 
     int x, y;
     for(y = yMin; y < yMax + 1; y++) {
 
-        int f21xyXLOOP = f21xy;
+        int f12xyXLOOP = f12xy;
         int f20xyXLOOP = f20xy;
         int f01xyXLOOP = f01xy;
         for(x = xMin; x < xMax + 1; x++) {
+                //printf("f21xyXLOOP: %f, f20xyXLOOP: %f, f01xyXLOOP: %f\n", f21xyXLOOP, f20xyXLOOP, f01xyXLOOP);
 
             //TODO: TRIANGLE PIXEL EDGES
-            if((f21xyXLOOP | f20xyXLOOP | f01xyXLOOP) >= 0) { 
+            if((f12xyXLOOP | f20xyXLOOP | f01xyXLOOP) >= 0) { 
 
-                float alpha = f21xyXLOOP / f21x0y0;
+
+                float alpha = f12xyXLOOP / f12x0y0;
                 float beta = f20xyXLOOP / f20x1y1;
                 float gamma = f01xyXLOOP / f01x2y2;
 
@@ -174,11 +175,11 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
                 fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, image);
 
             }
-            f21xyXLOOP = f21xyXLOOP + A21;
+            f12xyXLOOP = f12xyXLOOP + A12;
             f20xyXLOOP = f20xyXLOOP + A20;
             f01xyXLOOP = f01xyXLOOP + A01;
         } 
-        f21xy = f21xy + B21;
+        f12xy = f12xy + B12;
         f20xy = f20xy + B20;
         f01xy = f01xy + B01;
     }

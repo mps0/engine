@@ -42,6 +42,7 @@ bool fragmentShader(Vertex v0, Vertex v1, Vertex v2, Vec3f bary, int pixX, int p
 
         l = 0.f;
     }
+     l = 1.f;
 
     Vec3f colorf = l * Vec3f(255.f, 255.f, 255.f);
     Vec3i RGB = Vec3i((int)colorf.x, (int)colorf.y, (int)colorf.z);

@@ -7,7 +7,7 @@
 #include "vertex.hpp"
 #include "plane.hpp"
 
-#define SCREEN_WIDTH 1080
+#define SCREEN_WIDTH 720
 #define SCREEN_HEIGHT 720
 
 
@@ -161,7 +161,6 @@ bool cohenSutherlandClip(Vec2i &p0, Vec2i &p1) {
         } 
         //both in one of the areas defined above
         else if(c0 & c1) {
-                printf("hi\n");
             run = false;
             visible = false;
             break;

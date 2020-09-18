@@ -65,9 +65,9 @@ extern Mat4f model, viewPort;
 void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
 
-    v0.pos = model * v0.pos;
-    v1.pos = model * v1.pos;
-    v2.pos = model * v2.pos;
+    //v0.pos = model * v0.pos;
+    //v1.pos = model * v1.pos;
+    //v2.pos = model * v2.pos;
 
     //back-face culling
     Vec3f l01 = Vec3f(v1.pos.x, v1.pos.y, v1.pos.z) - Vec3f(v0.pos.x, v0.pos.y, v0.pos.z);  
@@ -109,9 +109,9 @@ void pipeline(Image* image, Vertex v0, Vertex v1, Vertex v2, Camera* cam) {
 
     drawTriangle(v0, v1, v2, image);
 
-    //drawLine(pi0, pi1, c0, c1, z0, z1, image);
-    //drawLine(pi1, pi2, c1, c2, z1, z2, image);
-    //drawLine(pi2, pi0, c2, c0, z2, z0, image);
+    //drawLine(v0, v1, image);
+    //drawLine(v1, v2, image);
+    //drawLine(v2, v0, image);
 }
 
 
