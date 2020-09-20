@@ -1,6 +1,10 @@
 A software rasterizer I am writing from scratch (window/input management through SDL2, and OBJ loading using https://github.com/Bly7/OBJ-Loader)
 
 
+Shaddow mapping working. I will be taking a break from this project and work on
+implementing a pipeline in Vulkan.
+<img src="vids/shadow_mapping.gif" width="300">
+
 Working on texturing:
 <img src="vids/texture.png" width="300">
 

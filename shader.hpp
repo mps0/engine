@@ -59,7 +59,6 @@ bool fragmentShader(Vertex v0, Vertex v1, Vertex v2, Vec3f bary, int pixX, int p
     //}
     //
 
-//printf("l: %f\n",l);
 
 
     Vec3f colorf = l * 255.f * Vec4toVec3(tex->getColor(uv));

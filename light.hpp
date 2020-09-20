@@ -34,29 +34,32 @@ class ShadowLight{
    float zDepth = bary.x * p0.z + bary.y * p1.z + bary.z * p2.z;
 
 
-   float x0 = p0.x;
-   float y0 = p0.y;
+   //float x0 = p0.x;
+   //float y0 = p0.y;
 
-   float x1 = p1.x;
-   float y1 = p1.y;
+   //float x1 = p1.x;
+   //float y1 = p1.y;
 
-   float x2 = p2.x;
-   float y2 = p2.y;
+   //float x2 = p2.x;
+   //float y2 = p2.y;
 
 
-   //printf("X0: %f\n",x0);
+   ////printf("X0: %f\n",x0);
 
-   if ((x0 < 720.f) && (x0 >=0.f)){
-   if ((y0 < 720.f) && (y0 >=0.f)){
+   //if ((x0 < 720.f) && (x0 >=0.f)){
+   //if ((y0 < 720.f) && (y0 >=0.f)){
 
-   if ((x1 < 720.f) && (x1 >=0.f)){
-   if ((y1 < 720.f) && (y1 >=0.f)){
-   
-   if ((x2 < 720.f) && (x2 >=0.f)){
-   if ((y2 < 720.f) && (y2 >=0.f)){
+   //if ((x1 < 720.f) && (x1 >=0.f)){
+   //if ((y1 < 720.f) && (y1 >=0.f)){
+   //
+   //if ((x2 < 720.f) && (x2 >=0.f)){
+   //if ((y2 < 720.f) && (y2 >=0.f)){
 
-   int x = (int)(bary.x * x0 + bary.y * x1 + bary.z * x2);     
-   int y = (int)(bary.x * y0 + bary.y * y1 + bary.z * y2);     
+   //int x = (int)(bary.x * x0 + bary.y * x1 + bary.z * x2);     
+   //int y = (int)(bary.x * y0 + bary.y * y1 + bary.z * y2);     
+
+   int x = (int)(bary.x * p0.x + bary.y * p1.x + bary.z * p2.x);     
+   int y = (int)(bary.x * p0.y + bary.y * p1.y + bary.z * p2.y);     
 
    if (x < 0 || y < 0) {
        return 0.f;
@@ -69,11 +72,10 @@ class ShadowLight{
 
 
     
-   }}}}}}
+   //}}}}}}
 
    //printf("SHADOW\n");
 
-   return 0.f;
   }
 
 

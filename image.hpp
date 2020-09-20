@@ -90,7 +90,7 @@ class ShadowMap : public Image{
             unsigned int idx = y * width + x; 
 
 
-            float offset = 0.01f;
+            float offset = 0.001f;
             if(zDepth >= (zBuffer[idx] - offset)) {
 
 

@@ -17,8 +17,8 @@
 
 
 
-#define SCREEN_WIDTH 720
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 500
+#define SCREEN_HEIGHT 500
 
 
 Mat4f VP, viewPort, VPShadow;
@@ -79,10 +79,10 @@ int main(void) {
     //
     //
     Asset* obj = new OBJmesh();
-    obj->model.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
-    obj->model.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
-    obj->model.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
-    obj->model.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
+    //obj->model.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
+    //obj->model.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
+    //obj->model.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
+    //obj->model.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
     obj->tex = new colorTexture(Vec4f(0.f, 0.f, 1.f, 1.f));
 
     
@@ -95,7 +95,8 @@ int main(void) {
 
 
 
-    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
+    //Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
+    Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 10.f, 0.f));
     Camera* camShadow = new Camera(Vec3f(-1.f, 0.5f, 0.f), Vec3f(-1.f, -2.f, 0.5f), Vec3f(12.f, 10.f, -10.f));
 
     std::vector<Camera*> cams;
@@ -103,6 +104,7 @@ int main(void) {
     cams.push_back(cam);
 
     bool run = true; 
+    int i = 0;
     while(run) {
         auto exec_start = std::chrono::high_resolution_clock::now();
 
@@ -143,8 +145,28 @@ int main(void) {
 
         VP = persp * view;
 
-        if(count == 0) {VPShadow = VP;};
+        if(count == 0) {VPShadow = VP;;
 
+        i++;
+        i = i % 2000;
+        float pi = 3.141592;
+        float alpha = (i / 50.f) * pi;
+
+        float cosa = cos(alpha);
+        float sina = sin(alpha);
+        Mat4f rotY = Mat4f();
+        rotY.c0 = Vec4f(cosa, 0.f, -sina, 0.f);
+        rotY.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
+        rotY.c2 = Vec4f(sina, 0.f, cosa, 0.f);
+        rotY.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+
+        Mat4f transM = Mat4f();
+        transM.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
+        transM.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
+        transM.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
+        transM.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
+        obj->model = transM * rotY;
+        }
         //Viewport transform
         viewPort.c0 = Vec4f(SCREEN_WIDTH / 2.f, 0.f, 0.f, 0.f);
         viewPort.c1 = Vec4f(0.f, -SCREEN_HEIGHT / 2.f, 0.f, 0.f);
@@ -153,6 +175,12 @@ int main(void) {
         
 
         if(count == 1) {
+
+
+
+
+
+
         while( SDL_PollEvent( &event ) != 0 ){
             switch(event.type) {
 
@@ -216,9 +244,9 @@ int main(void) {
                 v1.pos = asset->Asset::model * v1.pos;
                 v2.pos = asset->Asset::model * v2.pos;
 
-    v0.worldPos = v0.pos;
-    v1.worldPos = v1.pos;
-    v2.worldPos = v2.pos;
+                v0.worldPos = v0.pos;
+                v1.worldPos = v1.pos;
+                v2.worldPos = v2.pos;
 
 
                 //printf("v0: (%f, %f, %f)\n", v0.pos.x, v0.pos.y, v0.pos.z);
@@ -239,7 +267,9 @@ int main(void) {
 
 
         SDL_UpdateTexture(texture, NULL, image.pixels,  SCREEN_WIDTH * sizeof(Uint32));
+        sMap.clear();
         image.clear();
+
 
 
         SDL_RenderClear(renderer);
