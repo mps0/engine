@@ -24,7 +24,8 @@ void obj(std::vector<Vertex> &verts, std::vector<int> &idx) {
 
 	// Load .obj File
 	//bool loadout = Loader.LoadFile("box_stack.obj");
-	bool loadout = Loader.LoadFile("african_head.obj");
+	//bool loadout = Loader.LoadFile("african_head.obj");
+	bool loadout = Loader.LoadFile("obj/whale.obj");
 
 	// Check to see if it loaded
 
@@ -64,7 +65,6 @@ void obj(std::vector<Vertex> &verts, std::vector<int> &idx) {
                 v.pos.y = scale * curMesh.Vertices[j].Position.Y;
                 v.pos.z = scale * curMesh.Vertices[j].Position.Z;
 
-                v.color = Vec4f(1.f, 1.f, 1.f, 1.f);
 
                 v.normal.x = curMesh.Vertices[j].Normal.X;
                 v.normal.y = curMesh.Vertices[j].Normal.Y;

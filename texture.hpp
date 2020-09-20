@@ -24,13 +24,13 @@ class Texture{
 };
 
 
-class Color: public Texture{
+class colorTexture: public Texture{
     public:
 
     Vec4f color;
 
 
-    Color(Vec4f color) : color(color) {}
+    colorTexture(Vec4f color) : color(color) {}
 
     virtual Vec4f getColor(Vec2f uv)  {
 
@@ -50,9 +50,10 @@ class Color: public Texture{
 
 class checkerBoardTexture: public Texture{
     public:
-    float scale = 5.f;
+    float scale;
      
 
+    checkerBoardTexture(float scale) : scale(scale) {}
 
     virtual Vec4f getColor(Vec2f uv) {
 
@@ -63,17 +64,9 @@ class checkerBoardTexture: public Texture{
 
     if (umod2 == vmod2) 
     return Vec4f(1.f, 1.f, 1.f, 1.f);
-    else return Vec4f(0.f, 0.f, 1.f, 1.f);
+    else return Vec4f(1.f, 0.f, 0.f, 1.f);
     
     }
-
-
-
-
-
-
-
-
 
 };
 

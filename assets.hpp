@@ -5,6 +5,7 @@
 #include "pipeline.hpp"
 #include "vertex.hpp"
 #include "obj.hpp"
+#include "matrix.hpp"
 
 class Asset{
     public:
@@ -12,6 +13,13 @@ class Asset{
         int*    iBuffer;
         int num_vertices;
         int num_triangles;
+
+        Texture* tex;
+        Mat4f model = Mat4f(Vec4f(1.f, 0.f, 0.f, 0.f),
+                            Vec4f(0.f, 1.f, 0.f, 0.f),
+                            Vec4f(0.f, 0.f, 1.f, 0.f),
+                            Vec4f(0.f, 0.f, 0.f, 1.f));
+
 
         Asset() : vBuffer(nullptr), iBuffer(nullptr) {}
 

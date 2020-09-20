@@ -4,6 +4,7 @@
 #include "image.hpp"
 #include "vector.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 
 
@@ -85,7 +86,7 @@ int clamp(int x, int min, int max) {
 
 
 //void drawTriangle(Vec2i p0, Vec2i p1, Vec2i p2, Vec4f c0, Vec4f c1, Vec4f c2, Vec3f n0, Vec3f n1, Vec3f n2, float z0, float z1, float z2, Image* image) {
-void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
+void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Texture* tex, Image* image, bool s) {
 
     int x0, y0, x1, y1, x2, y2;
 
@@ -97,9 +98,6 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
 
     x2 = (int)v2.pos.x;
     y2 = (int)v2.pos.y;
-
-
-
 
 
     int xMin = x0;
@@ -161,7 +159,7 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
         int f20xyXLOOP = f20xy;
         int f01xyXLOOP = f01xy;
         for(x = xMin; x < xMax + 1; x++) {
-                //printf("f21xyXLOOP: %f, f20xyXLOOP: %f, f01xyXLOOP: %f\n", f21xyXLOOP, f20xyXLOOP, f01xyXLOOP);
+//                printf("f12xyXLOOP: %f, f20xyXLOOP: %f, f01xyXLOOP: %f\n", f12xyXLOOP, f20xyXLOOP, f01xyXLOOP);
 
             //TODO: TRIANGLE PIXEL EDGES
             if((f12xyXLOOP | f20xyXLOOP | f01xyXLOOP) >= 0) { 
@@ -172,7 +170,7 @@ void drawTriangle(Vertex v0, Vertex v1, Vertex v2, Image* image) {
                 float gamma = f01xyXLOOP / f01x2y2;
 
 
-                fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, image);
+                fragmentShader(v0, v1, v2, Vec3f(alpha, beta, gamma), x, y, tex, image, s);
 
             }
             f12xyXLOOP = f12xyXLOOP + A12;
