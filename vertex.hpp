@@ -7,7 +7,7 @@ class Vertex{
     public:
 
 
-        Vec4f pos, color;
+        Vec4f pos;
         Vec3f normal;
         Vec2f uv;
         Vec4f worldPos;

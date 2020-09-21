@@ -95,9 +95,6 @@ void drawLine(Vertex v0, Vertex v1, Image* image) {
     int dx = X1 - X0;
     int dy = Y1 - Y0;
 
-    Vec4f c0 = v0.color;
-    Vec4f c1 = v1.color;
-
     float z0 = v0.pos.z;
     float z1 = v1.pos.z;
 
@@ -111,7 +108,8 @@ void drawLine(Vertex v0, Vertex v1, Image* image) {
         for(x = X0; x < X1 + 1; x++) {
 
             float t = (float)(x - X0) / (float)(X1 - X0); 
-            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            Vec4f RGBAf = Vec4f(1.f, 1.f, 1.f, 1.f);
+            
             float zDepth = (1.f - t) * z0 + t * z1;
 
             RGB.x = (int)(RGBAf.x * 255.f);
@@ -133,7 +131,7 @@ void drawLine(Vertex v0, Vertex v1, Image* image) {
         for(x = X0; x < X1 + 1; x++) {
 
             float t = (float)(x - X0) / (float)(X1 - X0); 
-            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            Vec4f RGBAf = Vec4f(1.f, 1.f, 1.f, 1.f);
             float zDepth = (1.f - t) * z0 + t * z1;
 
             RGB.x = (int)(RGBAf.x * 255.f);
@@ -154,8 +152,7 @@ void drawLine(Vertex v0, Vertex v1, Image* image) {
         for(y = Y0; y > Y1 - 1; y--) {
             float t = (float)(Y0 - y) / (float)(Y0 - Y1); 
             float zDepth = (1.f - t) * z0 + t * z1;
-
-            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            Vec4f RGBAf = Vec4f(1.f, 1.f, 1.f, 1.f);
             RGB.x = (int)(RGBAf.x * 255.f);
             RGB.y = (int)(RGBAf.y * 255.f);
             RGB.z = (int)(RGBAf.z * 255.f);
@@ -176,7 +173,7 @@ void drawLine(Vertex v0, Vertex v1, Image* image) {
         for(y = Y0; y < Y1 + 1; y++) {
 
             float t = (float)(y - Y0) / (float)(Y1 - Y0); 
-            Vec4f RGBAf = (1.f - t) * c0 + t * c1;
+            Vec4f RGBAf = Vec4f(1.f, 1.f, 1.f, 1.f);
             float zDepth = (1.f - t) * z0 + t * z1;
             RGB.x = (int)(RGBAf.x * 255.f);
             RGB.y = (int)(RGBAf.y * 255.f);

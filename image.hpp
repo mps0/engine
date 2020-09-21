@@ -78,7 +78,6 @@ class ShadowMap : public Image{
 
             unsigned int idx = y * width + x; 
             if (zDepth > zBuffer[idx]) {
-                //zBuffer[idx] = 1.f + zDepth * .0333333333f;
                 zBuffer[idx] = zDepth;
             } 
 
@@ -90,12 +89,10 @@ class ShadowMap : public Image{
             unsigned int idx = y * width + x; 
 
 
-            float offset = 0.001f;
+            float offset = 0.01f;
             if(zDepth >= (zBuffer[idx] - offset)) {
 
-
-                //return  1.f + zBuffer[idx] * .0333333333f;
-                return  1.f + (zBuffer[idx] + 1.f) / 29.f;
+                return  1.f + (zBuffer[idx] + 1.f) / 29.f; //hardcoded for n= -1, f= -30
 
             }
 

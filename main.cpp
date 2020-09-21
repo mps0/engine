@@ -17,8 +17,8 @@
 
 
 
-#define SCREEN_WIDTH 500
-#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 720
+#define SCREEN_HEIGHT 720
 
 
 Mat4f VP, viewPort, VPShadow;
@@ -41,7 +41,6 @@ int main(void) {
             SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     Image image = Image(SCREEN_WIDTH, SCREEN_HEIGHT);
-    //ShadowMap sMap = ShadowMap(SCREEN_WIDTH, SCREEN_HEIGHT);
     ShadowMap sMap = ShadowMap(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     sm = &sMap;
@@ -49,10 +48,10 @@ int main(void) {
 
 
 
-
     //Asset* triangle = new Triangle(Vec3f(0.f, -0.5f, -1.f), Vec3f(0.f, 0.5f, -1.f), Vec3f(-2.5f, 0.5f, -1.f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
     //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
-     //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    //Asset* triangle = new Triangle(Vec3f(-1.0f, -0.5f, -1.5f), Vec3f(0.f, -0.5f, -1.5f), Vec3f(-1.0f, 0.5f, -1.5f),Vec4f(1.f, 0.f, 0.f, 1.f), Vec4f(0.f, 1.f, 0.f, 1.f), Vec4f(0.f, 0.f, 1.f, 1.f));
+    //Asset* box = new Box(Vec3f(0.f, 0.f, -3.f), 0.5f, 0.5f, 0.5f);
     Asset* grid = new Grid(Vec3f(0.f, 0.f, 0.f), 20.f, 20.f, 20, 20);  
 
     float ang = 3.141592f * 0.5f;
@@ -68,24 +67,12 @@ int main(void) {
     trans.c2 = Vec4f(0.0f, 0.f, 1.f, 0.f);
     trans.c3 = Vec4f(0.0f, -2.5f, -10.f, 1.f);
 
-    Mat4f modelGrid = trans * rot;
-
-    grid->model = modelGrid;
+    grid->model = trans * rot;
     grid->tex = new checkerBoardTexture(10.f);
 
-
-
-    //Asset* box = new Box(Vec3f(0.f, 0.f, -3.f), 0.5f, 0.5f, 0.5f);
-    //
-    //
     Asset* obj = new OBJmesh();
-    //obj->model.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
-    //obj->model.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
-    //obj->model.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
-    //obj->model.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
     obj->tex = new colorTexture(Vec4f(0.f, 0.f, 1.f, 1.f));
 
-    
 
     std::vector<Asset*> assets;
     //assets.push_back(triangle);
@@ -95,7 +82,6 @@ int main(void) {
 
 
 
-    //Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 0.f, 0.f));
     Camera* cam = new Camera(Vec3f(0.f, 1.f, 0.f), Vec3f(0.f, 0.f, -1.f), Vec3f(0.f, 10.f, 0.f));
     Camera* camShadow = new Camera(Vec3f(-1.f, 0.5f, 0.f), Vec3f(-1.f, -2.f, 0.5f), Vec3f(12.f, 10.f, -10.f));
 
@@ -111,159 +97,153 @@ int main(void) {
         int count = 0;
         for(Camera* cam : cams) {
 
-        //transform from world-space to camera space
-        //first match rotation
-        Mat4f rot = Mat4f();
-        rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
-        rot.c1 = Vec4f(cam->u.y, cam->v.y, cam->w.y, 0.f);
-        rot.c2 = Vec4f(cam->u.z, cam->v.z, cam->w.z, 0.f);
-        rot.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+            //transform from world-space to camera space
+            //first match rotation
+            Mat4f rot = Mat4f();
+            rot.c0 = Vec4f(cam->u.x, cam->v.x, cam->w.x, 0.f);
+            rot.c1 = Vec4f(cam->u.y, cam->v.y, cam->w.y, 0.f);
+            rot.c2 = Vec4f(cam->u.z, cam->v.z, cam->w.z, 0.f);
+            rot.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
 
-        //now, line up origins
-        Mat4f trans = Mat4f();
-        trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
-        trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
-        trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-        trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
+            //now, line up origins
+            Mat4f trans = Mat4f();
+            trans.c0 = Vec4f(1.f, 0.f, 0.f, 0.f);
+            trans.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
+            trans.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
+            trans.c3 = Vec4f(-cam->pos.x, -cam->pos.y, -cam->pos.z, 1.f);
 
-        //combine
-        Mat4f view = rot * trans;
+            //combine
+            Mat4f view = rot * trans;
 
-        float n = -1.0f; //near plane
-        float f = -30.f; //far plane
+            float n = -1.0f; //near plane
+            float f = -30.f; //far plane
 
-        //float alpha = 3.141592 * .25f;
-        //float t = tan(alpha * .5f) * abs(n);
-        //float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
-        //float b = - t;
-        //float l = - r;
-        Mat4f persp = Mat4f();
-        persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
-        persp.c1 = Vec4f(0.f, n, 0.f, 0.f);
-        persp.c2 = Vec4f(0.f, 0.f, f + n, 1);
-        persp.c3 = Vec4f(0.f, 0.f, -f * n, 0.f);
+            //float alpha = 3.141592 * .25f;
+            //float t = tan(alpha * .5f) * abs(n);
+            //float r = SCREEN_WIDTH / SCREEN_HEIGHT * t;
+            //float b = - t;
+            //float l = - r;
+            Mat4f persp = Mat4f();
+            persp.c0 = Vec4f(n, 0.f, 0.f, 0.f);
+            persp.c1 = Vec4f(0.f, n, 0.f, 0.f);
+            persp.c2 = Vec4f(0.f, 0.f, f + n, 1);
+            persp.c3 = Vec4f(0.f, 0.f, -f * n, 0.f);
 
-        VP = persp * view;
+            VP = persp * view;
 
-        if(count == 0) {VPShadow = VP;;
+            if(count == 0) {
 
-        i++;
-        i = i % 2000;
-        float pi = 3.141592;
-        float alpha = (i / 50.f) * pi;
+                VPShadow = VP;;
 
-        float cosa = cos(alpha);
-        float sina = sin(alpha);
-        Mat4f rotY = Mat4f();
-        rotY.c0 = Vec4f(cosa, 0.f, -sina, 0.f);
-        rotY.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
-        rotY.c2 = Vec4f(sina, 0.f, cosa, 0.f);
-        rotY.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
+                i++;
+                i = i % 2000;
+                float pi = 3.141592;
+                float alpha = (i / 50.f) * pi;
 
-        Mat4f transM = Mat4f();
-        transM.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
-        transM.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
-        transM.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
-        transM.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
-        obj->model = transM * rotY;
-        }
-        //Viewport transform
-        viewPort.c0 = Vec4f(SCREEN_WIDTH / 2.f, 0.f, 0.f, 0.f);
-        viewPort.c1 = Vec4f(0.f, -SCREEN_HEIGHT / 2.f, 0.f, 0.f);
-        viewPort.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
-        viewPort.c3 = Vec4f((SCREEN_WIDTH - 1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 0.f, 1.f);
-        
+                float cosa = cos(alpha);
+                float sina = sin(alpha);
+                Mat4f rotY = Mat4f();
+                rotY.c0 = Vec4f(cosa, 0.f, -sina, 0.f);
+                rotY.c1 = Vec4f(0.f, 1.f, 0.f, 0.f);
+                rotY.c2 = Vec4f(sina, 0.f, cosa, 0.f);
+                rotY.c3 = Vec4f(0.f, 0.f, 0.f, 1.f);
 
-        if(count == 1) {
-
-
-
-
-
-
-        while( SDL_PollEvent( &event ) != 0 ){
-            switch(event.type) {
-
-                case SDL_QUIT: {
-                                   run = false;
-                                   break;
-                               }
-                case SDL_MOUSEMOTION:{
-                                         unsigned int button = SDL_GetMouseState(NULL, NULL);
-                                         if (button & SDL_BUTTON(SDL_BUTTON_LEFT)) {
-                                             cam->rotate(event.motion.xrel, -event.motion.yrel);
-                                         }
-                                         else if (button & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-                                             cam->roll(event.motion.xrel);
-                                         }
-                                         break;
-                                     }
-                case SDL_KEYDOWN: {
-                                      switch( event.key.keysym.sym )
-                                      {
-                                          case SDLK_w:
-                                              cam->pos = cam->pos + cam->sensitivity * cam->forward; 
-                                              break;
-
-                                          case SDLK_s:
-                                              cam->pos = cam->pos - cam->sensitivity * cam->forward; 
-                                              break;
-
-                                          case SDLK_a:
-                                              cam->pos = cam->pos - cam->sensitivity * cam->u;
-                                              break;
-
-                                          case SDLK_d:
-                                              cam->pos = cam->pos + cam->sensitivity * cam->u;
-                                              break;
-
-                                          case SDLK_UP:
-                                              cam->pos = cam->pos + cam->sensitivity * cam->up;
-                                              break;
-
-                                          case SDLK_DOWN:
-                                              cam->pos = cam->pos - cam->sensitivity * cam->up;
-                                              break;
-                                      }
-
-                                  }
+                Mat4f transM = Mat4f();
+                transM.c0 = Vec4f(0.075f, 0.f, 0.f, 0.f);
+                transM.c1 = Vec4f(0.f, 0.075f, 0.f, 0.f);
+                transM.c2 = Vec4f(0.f, 0.f, 0.075f, 0.f);
+                transM.c3 = Vec4f(0.f, 0.f, -10.f, 1.f);
+                obj->model = transM * rotY;
             }
-        }        }
-        
+            //Viewport transform
+            viewPort.c0 = Vec4f(SCREEN_WIDTH / 2.f, 0.f, 0.f, 0.f);
+            viewPort.c1 = Vec4f(0.f, -SCREEN_HEIGHT / 2.f, 0.f, 0.f);
+            viewPort.c2 = Vec4f(0.f, 0.f, 1.f, 0.f);
+            viewPort.c3 = Vec4f((SCREEN_WIDTH - 1.f) / 2.f, (SCREEN_HEIGHT - 1.f) / 2.f, 0.f, 1.f);
 
 
-        Vertex v0, v1, v2;
-        for(Asset* asset : assets) {
-            for(int  k = 0; k < asset->num_triangles; k++) {
+            if(count == 1) {
+                while( SDL_PollEvent( &event ) != 0 ){
+                    switch(event.type) {
 
-                v0 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k]];
-                v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
-                v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
+                        case SDL_QUIT: {
+                                           run = false;
+                                           break;
+                                       }
+                        case SDL_MOUSEMOTION:{
+                                                 unsigned int button = SDL_GetMouseState(NULL, NULL);
+                                                 if (button & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+                                                     cam->rotate(event.motion.xrel, -event.motion.yrel);
+                                                 }
+                                                 else if (button & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
+                                                     cam->roll(event.motion.xrel);
+                                                 }
+                                                 break;
+                                             }
+                        case SDL_KEYDOWN: {
+                                              switch( event.key.keysym.sym )
+                                              {
+                                                  case SDLK_w:
+                                                      cam->pos = cam->pos + cam->sensitivity * cam->forward; 
+                                                      break;
 
-                v0.pos = asset->Asset::model * v0.pos;
-                v1.pos = asset->Asset::model * v1.pos;
-                v2.pos = asset->Asset::model * v2.pos;
+                                                  case SDLK_s:
+                                                      cam->pos = cam->pos - cam->sensitivity * cam->forward; 
+                                                      break;
 
-                v0.worldPos = v0.pos;
-                v1.worldPos = v1.pos;
-                v2.worldPos = v2.pos;
+                                                  case SDLK_a:
+                                                      cam->pos = cam->pos - cam->sensitivity * cam->u;
+                                                      break;
+
+                                                  case SDLK_d:
+                                                      cam->pos = cam->pos + cam->sensitivity * cam->u;
+                                                      break;
+
+                                                  case SDLK_UP:
+                                                      cam->pos = cam->pos + cam->sensitivity * cam->up;
+                                                      break;
+
+                                                  case SDLK_DOWN:
+                                                      cam->pos = cam->pos - cam->sensitivity * cam->up;
+                                                      break;
+                                              }
+
+                                          }
+                    }
+                }        }
 
 
-                //printf("v0: (%f, %f, %f)\n", v0.pos.x, v0.pos.y, v0.pos.z);
-                //printf("v1: (%f, %f, %f)\n", v1.pos.x, v1.pos.y, v1.pos.z);
-                //printf("v2: (%f, %f, %f)\n", v2.pos.x, v2.pos.y, v2.pos.z);
+
+            Vertex v0, v1, v2;
+            for(Asset* asset : assets) {
+                for(int  k = 0; k < asset->num_triangles; k++) {
+
+                    v0 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k]];
+                    v1 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 1]];
+                    v2 = asset->Asset::vBuffer[asset->Asset::iBuffer[3 * k + 2]];
+
+                    v0.pos = asset->Asset::model * v0.pos;
+                    v1.pos = asset->Asset::model * v1.pos;
+                    v2.pos = asset->Asset::model * v2.pos;
+
+                    v0.worldPos = v0.pos;
+                    v1.worldPos = v1.pos;
+                    v2.worldPos = v2.pos;
 
 
-                if(count == 0) pipeline(&sMap, asset->Asset::tex, v0, v1, v2, cam, true);
-                else           pipeline(&image, asset->Asset::tex, v0, v1, v2, cam, false);
-            
+                    //printf("v0: (%f, %f, %f)\n", v0.pos.x, v0.pos.y, v0.pos.z);
+                    //printf("v1: (%f, %f, %f)\n", v1.pos.x, v1.pos.y, v1.pos.z);
+                    //printf("v2: (%f, %f, %f)\n", v2.pos.x, v2.pos.y, v2.pos.z);
+
+
+                    if(count == 0) pipeline(&sMap, asset->Asset::tex, v0, v1, v2, cam, true);
+                    else           pipeline(&image, asset->Asset::tex, v0, v1, v2, cam, false);
+
+                }
             }
-        }
-        count++;
+            count++;
         }
 
-
-        
 
 
         SDL_UpdateTexture(texture, NULL, image.pixels,  SCREEN_WIDTH * sizeof(Uint32));

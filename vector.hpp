@@ -24,12 +24,6 @@ template<class T> class Vec2 {
             y = tmp;
         }
 
-        void print() {
-
-            printf("(%i, %i)\n", x, y);
-
-        }
-
         Vec2 operator+(Vec2 v) {
             return Vec2(x + v.x, y + v.y);
         }
@@ -78,12 +72,6 @@ class Vec3 {
             return (1.f / length()) * *this;
         }
 
-        void print() {
-
-            printf("(%f, %f, %f)\n", x, y, z);
-
-        }
-
         Vec3 operator-(Vec3 v) {
             return Vec3(x - v.x, y - v.y, z - v.z);
         }
@@ -91,8 +79,6 @@ class Vec3 {
         Vec3 operator+(Vec3 v) {
             return Vec3(x + v.x, y + v.y, z + v.z);
         }
-
-
 };
 
 
@@ -129,12 +115,6 @@ class Vec4 {
         Vec4() : x(0), y(0), z(0), w(0){}
         Vec4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
 
-        void print() {
-
-            printf("(%f, %f, %f, %f)\n", x, y, z, w);
-
-        }
-
         Vec4 operator+(Vec4 v) {
             return Vec4(x + v.x, y + v.y, z + v.z, w + v.w);
         }
@@ -155,9 +135,9 @@ Vec4<T> operator*(T a, Vec4<T> V) {
 template<class T>
 T Vec4dot(Vec4<T> v0, Vec4<T> v1) {
     return v0.x * v1.x +
-           v0.y * v1.y +
-           v0.z * v1.z +
-           v0.w * v1.w;
+        v0.y * v1.y +
+        v0.z * v1.z +
+        v0.w * v1.w;
 }
 
 template<class T>

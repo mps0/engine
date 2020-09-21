@@ -7,67 +7,45 @@
 class Texture{
     public:
 
-    Vec3f U,V, origin;
-    Vec2f scale;
+        Vec3f U,V, origin;
+        Vec2f scale;
 
-
-    virtual Vec4f getColor(Vec2f uv) = 0;
-
-
-
-
-    
-
-
-
-
+        virtual Vec4f getColor(Vec2f uv) = 0;
 };
 
 
 class colorTexture: public Texture{
     public:
 
-    Vec4f color;
+        Vec4f color;
 
+        colorTexture(Vec4f color) : color(color) {}
 
-    colorTexture(Vec4f color) : color(color) {}
+        Vec4f getColor(Vec2f uv)  {
 
-    virtual Vec4f getColor(Vec2f uv)  {
-
-        return color;
-
-
-
-    }
-
-
-
-    
-
-
+            return color;
+        }
 };
 
 
 class checkerBoardTexture: public Texture{
     public:
-    float scale;
-     
+        float scale;
 
-    checkerBoardTexture(float scale) : scale(scale) {}
+        checkerBoardTexture(float scale) : scale(scale) {}
 
-    virtual Vec4f getColor(Vec2f uv) {
+        Vec4f getColor(Vec2f uv) {
 
-    Vec2i uvi = Vec2i((int)(1.999999f * scale * uv.x), (int)(1.999999f * scale * uv.y));
+            Vec2i uvi = Vec2i((int)(1.999999f * scale * uv.x), (int)(1.999999f * scale * uv.y));
 
-    int umod2 =  uvi.x % 2;
-    int vmod2 =  uvi.y % 2;
+            int umod2 =  uvi.x % 2;
+            int vmod2 =  uvi.y % 2;
 
-    if (umod2 == vmod2) 
-    return Vec4f(1.f, 1.f, 1.f, 1.f);
-    else return Vec4f(1.f, 0.f, 0.f, 1.f);
-    
-    }
+            if (umod2 == vmod2) 
+                return Vec4f(1.f, 1.f, 1.f, 1.f);
+            else return Vec4f(1.f, 0.f, 0.f, 1.f);
 
+        }
 };
 
 

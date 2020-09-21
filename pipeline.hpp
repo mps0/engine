@@ -64,8 +64,6 @@ extern Mat4f viewPort;
 
 void pipeline(Image* image, Texture* tex, Vertex v0, Vertex v1, Vertex v2, Camera* cam, bool s) {
 
-    
-
 
     //back-face culling
     Vec3f l01 = Vec3f(v1.pos.x, v1.pos.y, v1.pos.z) - Vec3f(v0.pos.x, v0.pos.y, v0.pos.z);  
@@ -77,7 +75,6 @@ void pipeline(Image* image, Texture* tex, Vertex v0, Vertex v1, Vertex v2, Camer
     float dot = Vec3dot(n, cent - cam->pos);
 
     if (dot > 0.f) {return;}
-
 
     vertexShader(v0);
     vertexShader(v1);

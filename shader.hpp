@@ -11,10 +11,7 @@
 
 extern Mat4f VP;
 
-//extern ShadowMap sMap;
-
 bool vertexShader(Vertex &v) {
-
 
     //clip space
     v.pos = VP * v.pos;

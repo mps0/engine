@@ -41,10 +41,9 @@ class Triangle : public Asset{
 
     public:
     Vec3f p0, p1, p2;
-    Vec4f c0, c1, c2;
 
 
-    Triangle(Vec3f p0, Vec3f p1, Vec3f p2, Vec4f c0, Vec4f c1, Vec4f c2) : p0(p0), p1(p1), p2(p2), c0(c0), c1(c1), c2(c2){
+    Triangle(Vec3f p0, Vec3f p1, Vec3f p2) : p0(p0), p1(p1), p2(p2){
 
        num_vertices = 3;
        num_triangles = 1;
@@ -54,10 +53,6 @@ class Triangle : public Asset{
        vBuffer[0].pos = Vec4f(p0.x, p0.y, p0.z, 1.f);
        vBuffer[1].pos = Vec4f(p1.x, p1.y, p1.z, 1.f);
        vBuffer[2].pos = Vec4f(p2.x, p2.y, p2.z, 1.f);
-
-       vBuffer[0].color = c0;
-       vBuffer[1].color = c1;
-       vBuffer[2].color = c2;
 
        iBuffer[0] = 0;
        iBuffer[1] = 1;
@@ -83,7 +78,6 @@ class Box : public Asset {
 
                 num_triangles = 12;
                 num_vertices = 8;
-                Vec4f color = Vec4f(1.f, 0.f, 0.f, 1.f);
                 Vec4f p0 = Vec4f(-0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
                 Vec4f p1 = Vec4f(0.5f * width + origin.x, -0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
                 Vec4f p2 = Vec4f(-0.5f * width + origin.x, 0.5f * length + origin.y, -0.5f * height + origin.z, 1.f); 
@@ -104,19 +98,6 @@ class Box : public Asset {
                 vBuffer[5].pos = p5;
                 vBuffer[6].pos = p6;
                 vBuffer[7].pos = p7;
-
-
-                vBuffer[0].color = color; 
-                vBuffer[0].color = color; 
-                vBuffer[1].color = color; 
-                vBuffer[2].color = color; 
-                vBuffer[3].color = color; 
-                                        ;
-                vBuffer[4].color = color; 
-                vBuffer[5].color = color; 
-                vBuffer[6].color = color; 
-                vBuffer[7].color = color; 
-
 
                 iBuffer = new int[num_triangles * 3];
                 //bottom face
@@ -192,8 +173,6 @@ class Grid : public Asset {
                 num_vertices = (rows + 1) * (cols + 1);
                 num_triangles = rows * cols * 2;
 
-                Vec4f color = Vec4f(1.f, 1.f, 1.f, 1.f);
-
                 vBuffer = new Vertex[num_vertices];
                 iBuffer = new int[num_triangles * 3];
 
@@ -210,7 +189,6 @@ class Grid : public Asset {
                     for (int j = 0; j < cols + 1; j++) {
 
                         vBuffer[i * (cols + 1) + j].pos = Vec4f(j * xstep + xstart, ystart - i* ystep, origin.z, 1.f);
-                        vBuffer[i * (cols + 1) + j].color = color;
                         vBuffer[i * (cols + 1) + j].uv = Vec2f(((float)j)/cols, (1.f - (float)i/rows));
                     }
                 }
@@ -218,13 +196,6 @@ class Grid : public Asset {
                 for (int i = 0; i < rows; i++) {
                     for (int j = 0; j < cols; j++) {
                         int startIdx = 6 * (i * (cols) + j);
-
-                        //iBuffer[startIdx] = (i + 1) * (cols + 1) + j;
-                        //iBuffer[startIdx + 1] = i * (cols + 1) + j;
-                        //iBuffer[startIdx + 2] = i * (cols + 1) + j + 1;
-                        //iBuffer[startIdx + 3] = i * (cols + 1) + j + 1;;
-                        //iBuffer[startIdx + 4] = (i + 1) * (cols + 1) + j + 1;
-                        //iBuffer[startIdx + 5] = (i + 1) * (cols + 1) + j;
 
                         iBuffer[startIdx] = (i + 1) * (cols + 1) + j;
                         iBuffer[startIdx + 1] = (i + 1) * (cols + 1) + j + 1;
@@ -246,7 +217,6 @@ class OBJmesh : public Asset{
 
     std::vector<Vertex> verts;
     std::vector<int> idx;
-
 
     OBJmesh() {
 
